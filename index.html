@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clerk's Portal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f8;
+      color: #333;
+    }
+
+    /* ─── LOGIN ─── */
+    #loginPage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #4a4aff 0%, #7c3aed 100%);
+    }
+
+    .login-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .login-box .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #4a4aff, #7c3aed);
+      border-radius: 16px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #fff;
+    }
+
+    .login-box h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 6px;
+    }
+
+    .login-box p.subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .login-box input:focus { border-color: #4a4aff; }
+
+    .login-box button {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #4a4aff, #7c3aed);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .login-box button:hover { opacity: .9; }
+    .login-error { color: #e53e3e; font-size: 13px; margin-top: 10px; }
+
+    /* ─── PORTAL ─── */
+    #portalPage { display: none; }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e8e8f0;
+      padding: 0 32px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar .brand {
+      font-size: 17px;
+      font-weight: 700;
+      color: #4a4aff;
+    }
+
+    .topbar .user-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar .user-area span {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .topbar .user-area .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: #555;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background .2s;
+    }
+
+    .topbar .user-area .icon-btn:hover { background: #f0f2f8; }
+
+    .hero {
+      text-align: center;
+      padding: 44px 20px 24px;
+    }
+
+    .hero h1 { font-size: 28px; font-weight: 800; color: #1a1a2e; }
+    .hero p { font-size: 14px; color: #888; margin-top: 6px; }
+
+    /* ─── TABS ─── */
+    .tabs-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 0 auto 30px;
+      max-width: 700px;
+      background: #e8e8f0;
+      border-radius: 10px;
+      padding: 4px;
+      gap: 2px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 9px 14px;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .tab-btn.active {
+      background: #fff;
+      color: #4a4aff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    /* ─── CONTENT ─── */
+    .tab-content { display: none; padding: 0 32px 60px; max-width: 1200px; margin: 0 auto; }
+    .tab-content.active { display: block; }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 16px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 28px 20px 22px;
+      text-align: center;
+      cursor: pointer;
+      border: 1.5px solid #eee;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(74,74,255,0.12);
+      border-color: #c7c7ff;
+    }
+
+    .card .card-icon {
+      width: 52px;
+      height: 52px;
+      background: #ebebff;
+      border-radius: 12px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    .card .admin-actions {
+      display: none;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      gap: 4px;
+    }
+
+    .card:hover .admin-actions { display: flex; }
+
+    .admin-actions button {
+      border: none;
+      border-radius: 6px;
+      padding: 4px 7px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-edit { background: #e0e7ff; color: #4a4aff; }
+    .btn-delete { background: #ffe0e0; color: #e53e3e; }
+
+    /* Add card placeholder */
+    .card-add {
+      background: #fafafe;
+      border: 2px dashed #c7c7ff;
+      cursor: pointer;
+      color: #4a4aff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 140px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      gap: 8px;
+      transition: background .2s;
+    }
+
+    .card-add:hover { background: #ededff; }
+    .card-add .plus { font-size: 28px; font-weight: 300; }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 460px;
+      max-width: 95vw;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+
+    .modal label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .modal input, .modal textarea, .modal select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color .2s;
+    }
+
+    .modal input:focus, .modal textarea:focus, .modal select:focus { border-color: #4a4aff; }
+    .modal textarea { resize: vertical; min-height: 70px; }
+
+    .modal .icon-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .modal .icon-picker span {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      background: #f0f2f8;
+      transition: all .15s;
+    }
+
+    .modal .icon-picker span.selected {
+      border-color: #4a4aff;
+      background: #e0e7ff;
+    }
+
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4a4aff, #7c3aed);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn-primary:hover { opacity: .9; }
+
+    .btn-secondary {
+      background: #f0f2f8;
+      color: #555;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ─── ADMIN PANEL ─── */
+    .admin-panel {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 28px;
+      border: 1.5px solid #eee;
+      margin-bottom: 28px;
+    }
+
+    .admin-panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+
+    .users-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .users-table th { text-align: left; padding: 9px 12px; background: #f0f2f8; color: #555; font-weight: 600; }
+    .users-table td { padding: 10px 12px; border-top: 1px solid #f0f0f0; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-admin { background: #e0e7ff; color: #4a4aff; }
+    .badge-user { background: #e8f5e9; color: #388e3c; }
+
+    .btn-sm {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-sm-danger { background: #ffe0e0; color: #e53e3e; }
+
+    /* ─── DARK MODE ─── */
+    body.dark {
+      background: #12121f;
+      color: #ddd;
+    }
+
+    body.dark .topbar { background: #1e1e30; border-color: #2a2a40; }
+    body.dark .topbar .brand { color: #7c7cff; }
+    body.dark .topbar .user-area span { color: #aaa; }
+    body.dark .topbar .icon-btn { color: #aaa; }
+    body.dark .topbar .icon-btn:hover { background: #2a2a40; }
+    body.dark .hero h1 { color: #eee; }
+    body.dark .tabs-wrapper { background: #2a2a40; }
+    body.dark .tab-btn { color: #aaa; }
+    body.dark .tab-btn.active { background: #1e1e30; color: #7c7cff; }
+    body.dark .card { background: #1e1e30; border-color: #2a2a40; }
+    body.dark .card h3 { color: #eee; }
+    body.dark .card .card-icon { background: #2a2a40; }
+    body.dark .card-add { background: #1a1a2e; border-color: #3a3a60; color: #7c7cff; }
+    body.dark .card-add:hover { background: #222240; }
+    body.dark .modal { background: #1e1e30; }
+    body.dark .modal h3 { color: #eee; }
+    body.dark .modal input, body.dark .modal textarea, body.dark .modal select { background: #12121f; border-color: #2a2a40; color: #eee; }
+    body.dark .modal label { color: #aaa; }
+    body.dark .modal .icon-picker span { background: #2a2a40; }
+    body.dark .modal .icon-picker span.selected { background: #3a3a60; border-color: #7c7cff; }
+    body.dark .admin-panel { background: #1e1e30; border-color: #2a2a40; }
+    body.dark .admin-panel h3 { color: #eee; }
+    body.dark .users-table th { background: #2a2a40; color: #aaa; }
+    body.dark .users-table td { border-color: #2a2a40; }
+    body.dark .section-title { color: #eee; }
+
+    @media (max-width: 600px) {
+      .tab-content { padding: 0 16px 60px; }
+      .topbar { padding: 0 16px; }
+      .modal { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════ LOGIN PAGE ════════════════════════════ -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="logo">⛪</div>
+    <h2>Clerk's Portal</h2>
+    <p class="subtitle">Ward & Branch Administration</p>
+    <input type="text" id="loginUser" placeholder="Username" />
+    <input type="password" id="loginPass" placeholder="Password" />
+    <button onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ PORTAL PAGE ════════════════════════════ -->
+<div id="portalPage">
+  <div class="topbar">
+    <div class="brand" id="portalBrandName">Clerk's Portal</div>
+    <div class="user-area">
+      <span id="topbarUsername"></span>
+      <button class="icon-btn" title="Toggle Dark Mode" onclick="toggleDark()">🌙</button>
+      <button class="icon-btn" title="Logout" onclick="doLogout()">⎋</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1 id="heroTitle">Clerk's Portal</h1>
+    <p id="heroSubtitle">Your complete toolkit for ward & branch administration</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-wrapper" id="tabsWrapper"></div>
+
+  <!-- TAB CONTENTS -->
+  <div id="tabContents"></div>
+</div>
+
+<!-- ════════════ CARD MODAL ════════════ -->
+<div class="modal-overlay" id="cardModal">
+  <div class="modal">
+    <h3 id="cardModalTitle">Add Card</h3>
+    <label>Title *</label>
+    <input type="text" id="cardTitle" placeholder="e.g. MLS Reports" />
+    <label>Description</label>
+    <textarea id="cardDesc" placeholder="Short description..."></textarea>
+    <label>Link (URL)</label>
+    <input type="url" id="cardLink" placeholder="https://..." />
+    <label>Tab</label>
+    <select id="cardTab"></select>
+    <label>Icon</label>
+    <div class="icon-picker" id="iconPicker"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeCardModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveCard()">Save Card</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ TAB MODAL ════════════ -->
+<div class="modal-overlay" id="tabModal">
+  <div class="modal">
+    <h3 id="tabModalTitle">Add Tab</h3>
+    <label>Tab Name *</label>
+    <input type="text" id="tabNameInput" placeholder="e.g. Resources" />
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeTabModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveTab()">Save Tab</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ USER MODAL ════════════ -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <h3 id="userModalTitle">Add User</h3>
+    <label>Username *</label>
+    <input type="text" id="newUsername" placeholder="john_doe" />
+    <label>Password *</label>
+    <input type="password" id="newPassword" placeholder="Password" />
+    <label>Role</label>
+    <select id="newRole">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeUserModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveUser()">Save User</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ PORTAL SETTINGS MODAL ════════════ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h3>Portal Settings</h3>
+    <label>Portal Name</label>
+    <input type="text" id="settingsName" placeholder="Clerk's Portal" />
+    <label>Subtitle</label>
+    <input type="text" id="settingsSubtitle" placeholder="Your complete toolkit..." />
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA STORE  (localStorage-backed)
+// ══════════════════════════════════════════════════════
+const ICONS = ['📋','📁','📊','📝','👥','📞','🏠','📅','💰','🔑','⛪','📖','✉️','🖨️','📌','🔔','📣','🗂️','💼','🛡️'];
+
+function loadData() {
+  const raw = localStorage.getItem('clerks_portal_data');
+  if (raw) return JSON.parse(raw);
+  // Default seed data
+  return {
+    settings: { name: "Clerk's Portal", subtitle: "Your complete toolkit for ward & branch administration" },
+    users: [
+      { id: 1, username: 'admin', password: 'admin123', role: 'admin' },
+      { id: 2, username: 'clerk', password: 'clerk123', role: 'user' }
+    ],
+    tabs: [
+      { id: 1, name: 'Membership' },
+      { id: 2, name: 'Finance' },
+      { id: 3, name: 'Resources' },
+      { id: 4, name: 'Directories' }
+    ],
+    cards: [
+      { id: 1, tabId: 1, title: 'Member Records', desc: 'Access and update member records', link: '', icon: '👥' },
+      { id: 2, tabId: 1, title: 'Calling Tools', desc: 'Manage callings and assignments', link: '', icon: '📋' },
+      { id: 3, tabId: 1, title: 'Attendance', desc: 'Track sacrament meeting attendance', link: '', icon: '📅' },
+      { id: 4, tabId: 2, title: 'Fast Offering', desc: 'Fast offering records and reports', link: '', icon: '💰' },
+      { id: 5, tabId: 2, title: 'Budget Report', desc: 'Ward budget and expenses', link: '', icon: '📊' },
+      { id: 6, tabId: 3, title: 'Handbook', desc: 'General Handbook of Instructions', link: '[churchofjesuschrist.org](https://www.churchofjesuschrist.org/study/manual/general-handbook)', icon: '📖' },
+      { id: 7, tabId: 3, title: 'Directories', desc: 'Ward directory and contact info', link: '', icon: '📁' }
+    ]
+  };
+}
+
+function saveData() { localStorage.setItem('clerks_portal_data', JSON.stringify(db)); }
+
+let db = loadData();
+let currentUser = null;
+let editingCardId = null;
+let editingTabId = null;
+let editingUserId = null;
+let activeTabId = null;
+
+// ══════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const found = db.users.find(x => x.username === u && x.password === p);
+  if (!found) {
+    document.getElementById('loginError').textContent = 'Invalid username or password.';
+    return;
+  }
+  currentUser = found;
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('portalPage').style.display = 'block';
+  renderPortal();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('portalPage').style.display = 'none';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginError').textContent = '';
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ══════════════════════════════════════════════════════
+//  PORTAL RENDER
+// ══════════════════════════════════════════════════════
+function renderPortal() {
+  const isAdmin = currentUser.role === 'admin';
+  document.getElementById('topbarUsername').textContent = currentUser.username;
+  document.getElementById('heroTitle').textContent = db.settings.name;
+  document.getElementById('heroSubtitle').textContent = db.settings.subtitle;
+  document.getElementById('portalBrandName').textContent = db.settings.name;
+
+  renderTabs();
+  if (!activeTabId || !db.tabs.find(t => t.id === activeTabId)) {
+    activeTabId = db.tabs[0]?.id || null;
+  }
+  setActiveTab(activeTabId);
+}
+
+function renderTabs() {
+  const isAdmin = currentUser.role === 'admin';
+  const tw = document.getElementById('tabsWrapper');
+  tw.innerHTML = '';
+
+  db.tabs.forEach(tab => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (tab.id === activeTabId ? ' active' : '');
+    btn.textContent = tab.name;
+    btn.onclick = () => setActiveTab(tab.id);
+    tw.appendChild(btn);
+  });
+
+  // Admin tab
+  if (isAdmin) {
+    const adminBtn = document.createElement('button');
+    adminBtn.className = 'tab-btn' + (activeTabId === 'admin' ? ' active' : '');
+    adminBtn.textContent = '⚙ Admin';
+    adminBtn.onclick = () => setActiveTab('admin');
+    tw.appendChild(adminBtn);
+  }
+}
+
+function setActiveTab(tabId) {
+  activeTabId = tabId;
+  renderTabs();
+  renderTabContent();
+}
+
+function renderTabContent() {
+  const isAdmin = currentUser.role === 'admin';
+  const tc = document.getElementById('tabContents');
+  tc.innerHTML = '';
+
+  if (activeTabId === 'admin') {
+    renderAdminTab(tc);
+    return;
+  }
+
+  const tab = db.tabs.find(t => t.id === activeTabId);
+  if (!tab) return;
+
+  const div = document.createElement('div');
+  div.className = 'tab-content active';
+
+  // Cards for this tab
+  const cards = db.cards.filter(c => c.tabId === activeTabId);
+  const grid = document.createElement('div');
+  grid.className = 'cards-grid';
+
+  cards.forEach(card => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.innerHTML = `
+      <div class="card-icon">${card.icon || '📋'}</div>
+      <h3>${escHtml(card.title)}</h3>
+      <p>${escHtml(card.desc || '')}</p>
+      ${isAdmin ? `<div class="admin-actions">
+        <button class="btn-edit" onclick="openEditCard(event,${card.id})">✏️</button>
+        <button class="btn-delete" onclick="deleteCard(event,${card.id})">🗑</button>
+      </div>` : ''}
+    `;
+    if (card.link) {
+      c.onclick = () => window.open(card.link, '_blank');
+      c.title = card.link;
+      c.style.cursor = 'pointer';
+    }
+    grid.appendChild(c);
+  });
+
+  // Add card button (admin)
+  if (isAdmin) {
+    const addCard = document.createElement('div');
+    addCard.className = 'card-add';
+    addCard.innerHTML = `<span class="plus">＋</span><span>Add Card</span>`;
+    addCard.onclick = () => openAddCard(activeTabId);
+    grid.appendChild(addCard);
+  }
+
+  div.appendChild(grid);
+  tc.appendChild(div);
+}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN TAB
+// ══════════════════════════════════════════════════════
+function renderAdminTab(tc) {
+  const div = document.createElement('div');
+  div.className = 'tab-content active';
+  div.innerHTML = `
+    <!-- Settings -->
+    <div class="admin-panel">
+      <h3>🎨 Portal Settings</h3>
+      <button class="btn-primary" onclick="openSettingsModal()">Edit Portal Name & Subtitle</button>
+    </div>
+
+    <!-- Tab Management -->
+    <div class="admin-panel">
+      <h3>📑 Manage Tabs</h3>
+      <table class="users-table">
+        <thead><tr><th>Tab Name</th><th>Cards</th><th>Actions</th></tr></thead>
+        <tbody id="tabsTableBody"></tbody>
+      </table>
+      <br>
+      <button class="btn-primary" onclick="openAddTab()">＋ Add Tab</button>
+    </div>
+
+    <!-- User Management -->
+    <div class="admin-panel">
+      <h3>👥 Manage Users</h3>
+      <table class="users-table">
+        <thead><tr><th>Username</th><th>Role</th><th>Actions</th></tr></thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+      <br>
+      <button class="btn-primary" onclick="openAddUser()">＋ Add User</button>
+    </div>
+  `;
+  tc.appendChild(div);
+
+  // Fill tabs table
+  const tabsBody = div.querySelector('#tabsTableBody');
+  db.tabs.forEach(tab => {
+    const count = db.cards.filter(c => c.tabId === tab.id).length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escHtml(tab.name)}</td>
+      <td>${count}</td>
+      <td>
+        <button class="btn-sm btn-edit" onclick="openEditTab(${tab.id})">✏️ Edit</button>
+        &nbsp;
+        <button class="btn-sm btn-sm-danger" onclick="deleteTab(${tab.id})">🗑 Delete</button>
+      </td>
+    `;
+    tabsBody.appendChild(tr);
+  });
+
+  // Fill users table
+  const usersBody = div.querySelector('#usersTableBody');
+  db.users.forEach(user => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escHtml(user.username)}</td>
+      <td><span class="badge ${user.role === 'admin' ? 'badge-admin' : 'badge-user'}">${user.role}</span></td>
+      <td>
+        ${user.id !== currentUser.id
+          ? `<button class="btn-sm btn-sm-danger" onclick="deleteUser(${user.id})">🗑 Remove</button>`
+          : '<em style="font-size:11px;color:#aaa">You</em>'}
+      </td>
+    `;
+    usersBody.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  CARD CRUD
+// ══════════════════════════════════════════════════════
+function openAddCard(tabId) {
+  editingCardId = null;
+  document.getElementById('cardModalTitle').textContent = 'Add Card';
+  document.getElementById('cardTitle').value = '';
+  document.getElementById('cardDesc').value = '';
+  document.getElementById('cardLink').value = '';
+  populateCardTabSelect(tabId);
+  renderIconPicker(null);
+  document.getElementById('cardModal').classList.add('open');
+}
+
+function openEditCard(e, cardId) {
+  e.stopPropagation();
+  const card = db.cards.find(c => c.id === cardId);
+  if (!card) return;
+  editingCardId = cardId;
+  document.getElementById('cardModalTitle').textContent = 'Edit Card';
+  document.getElementById('cardTitle').value = card.title;
+  document.getElementById('cardDesc').value = card.desc || '';
+  document.getElementById('cardLink').value = card.link || '';
+  populateCardTabSelect(card.tabId);
+  renderIconPicker(card.icon);
+  document.getElementById('cardModal').classList.add('open');
+}
+
+function populateCardTabSelect(selectedTabId) {
+  const sel = document.getElementById('cardTab');
+  sel.innerHTML = '';
+  db.tabs.forEach(tab => {
+    const opt = document.createElement('option');
+    opt.value = tab.id;
+    opt.textContent = tab.name;
+    if (tab.id === selectedTabId) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function renderIconPicker(selected) {
+  const picker = document.getElementById('iconPicker');
+  picker.innerHTML = '';
+  ICONS.forEach(icon => {
+    const span = document.createElement('span');
+    span.textContent = icon;
+    if (icon === selected) span.classList.add('selected');
+    span.onclick = () => {
+      picker.querySelectorAll('span').forEach(s => s.classList.remove('selected'));
+      span.classList.add('selected');
+    };
+    picker.appendChild(span);
+  });
+}
+
+function getSelectedIcon() {
+  const sel = document.querySelector('#iconPicker span.selected');
+  return sel ? sel.textContent : '📋';
+}
+
+function saveCard() {
+  const title = document.getElementById('cardTitle').value.trim();
+  if (!title) { alert('Title is required.'); return; }
+  const desc = document.getElementById('cardDesc').value.trim();
+  const link = document.getElementById('cardLink').value.trim();
+  const tabId = parseInt(document.getElementById('cardTab').value);
+  const icon = getSelectedIcon();
+
+  if (editingCardId) {
+    const card = db.cards.find(c => c.id === editingCardId);
+    Object.assign(card, { title, desc, link, tabId, icon });
+  } else {
+    const newId = Date.now();
+    db.cards.push({ id: newId, tabId, title, desc, link, icon });
+  }
+  saveData();
+  closeCardModal();
+  // Switch to that tab
+  activeTabId = tabId;
+  renderPortal();
+}
+
+function deleteCard(e, cardId) {
+  e.stopPropagation();
+  if (!confirm('Delete this card?')) return;
+  db.cards = db.cards.filter(c => c.id !== cardId);
+  saveData();
+  renderPortal();
+}
+
+function closeCardModal() { document.getElementById('cardModal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+//  TAB CRUD
+// ══════════════════════════════════════════════════════
+function openAddTab() {
+  editingTabId = null;
+  document.getElementById('tabModalTitle').textContent = 'Add Tab';
+  document.getElementById('tabNameInput').value = '';
+  document.getElementById('tabModal').classList.add('open');
+}
+
+function openEditTab(tabId) {
+  const tab = db.tabs.find(t => t.id === tabId);
+  if (!tab) return;
+  editingTabId = tabId;
+  document.getElementById('tabModalTitle').textContent = 'Edit Tab';
+  document.getElementById('tabNameInput').value = tab.name;
+  document.getElementById('tabModal').classList.add('open');
+}
+
+function saveTab() {
+  const name = document.getElementById('tabNameInput').value.trim();
+  if (!name) { alert('Tab name is required.'); return; }
+  if (editingTabId) {
+    db.tabs.find(t => t.id === editingTabId).name = name;
+  } else {
+    db.tabs.push({ id: Date.now(), name });
+  }
+  saveData();
+  closeTabModal();
+  activeTabId = 'admin';
+  renderPortal();
+}
+
+function deleteTab(tabId) {
+  if (db.tabs.length <= 1) { alert('Cannot delete the last tab.'); return; }
+  if (!confirm('Delete this tab and all its cards?')) return;
+  db.tabs = db.tabs.filter(t => t.id !== tabId);
+  db.cards = db.cards.filter(c => c.tabId !== tabId);
+  saveData();
+  activeTabId = db.tabs[0].id;
+  renderPortal();
+}
+
+function closeTabModal() { document.getElementById('tabModal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+//  USER CRUD
+// ══════════════════════════════════════════════════════
+function openAddUser() {
+  editingUserId = null;
+  document.getElementById('userModalTitle').textContent = 'Add User';
+  document.getElementById('newUsername').value = '';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('newRole').value = 'user';
+  document.getElementById('userModal').classList.add('open');
+}
+
+function saveUser() {
+  const username = document.getElementById('newUsername').value.trim();
+  const password = document.getElementById('newPassword').value;
+  const role = document.getElementById('newRole').value;
+  if (!username || !password) { alert('Username and password are required.'); return; }
+  if (db.users.find(u => u.username === username)) { alert('Username already exists.'); return; }
+  db.users.push({ id: Date.now(), username, password, role });
+  saveData();
+  closeUserModal();
+  activeTabId = 'admin';
+  renderPortal();
+}
+
+function deleteUser(userId) {
+  if (!confirm('Remove this user?')) return;
+  db.users = db.users.filter(u => u.id !== userId);
+  saveData();
+  renderPortal();
+}
+
+function closeUserModal() { document.getElementById('userModal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+//  SETTINGS
+// ══════════════════════════════════════════════════════
+function openSettingsModal() {
+  document.getElementById('settingsName').value = db.settings.name;
+  document.getElementById('settingsSubtitle').value = db.settings.subtitle;
+  document.getElementById('settingsModal').classList.add('open');
+}
+
+function saveSettings() {
+  db.settings.name = document.getElementById('settingsName').value.trim() || "Clerk's Portal";
+  db.settings.subtitle = document.getElementById('settingsSubtitle').value.trim();
+  saveData();
+  closeSettingsModal();
+  renderPortal();
+}
+
+function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+//  DARK MODE
+// ══════════════════════════════════════════════════════
+function toggleDark() { document.body.classList.toggle('dark'); }
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
