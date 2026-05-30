@@ -25,9 +25,38 @@
       color: #333;
     }
 
+    /* ─── LOADING SCREEN ─── */
+    #loadingScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%);
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid rgba(201,168,76,0.2);
+      border-top-color: #c9a84c;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      color: #c9a84c;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
     /* ─── LOGIN PAGE ─── */
     #loginPage {
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
@@ -234,6 +263,33 @@
     }
 
     .topbar .user-area .icon-btn:hover { background: #f0f2f8; }
+
+    /* ─── SYNC INDICATOR ─── */
+    #syncIndicator {
+      position: fixed;
+      top: 62px;
+      right: 16px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      z-index: 150;
+      transition: opacity .4s;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #syncIndicator.syncing {
+      background: #fff3cd;
+      color: #856404;
+      opacity: 1;
+    }
+
+    #syncIndicator.synced {
+      background: #d4edda;
+      color: #155724;
+      opacity: 1;
+    }
 
     /* ─── IDLE WARNING BAR ─── */
     #idleWarning {
@@ -538,6 +594,94 @@
       font-weight: 600;
       cursor: pointer;
     }
+
+    /* ─── FIREBASE CONFIG MODAL ─── */
+    .firebase-setup-box {
+      background: linear-gradient(160deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 480px;
+      max-width: 95vw;
+      box-shadow: 0 0 0 1px rgba(201,168,76,0.25), 0 24px 80px rgba(0,0,0,0.6);
+      color: #e8d5a3;
+      position: relative;
+      z-index: 1;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .firebase-setup-box h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .firebase-setup-box p {
+      font-size: 12px;
+      color: var(--dark-muted);
+      margin-bottom: 18px;
+      line-height: 1.7;
+    }
+
+    .firebase-setup-box label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--dark-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .firebase-setup-box input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(201,168,76,0.25);
+      border-radius: 9px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      outline: none;
+      color: #e8d5a3;
+      transition: border-color .2s;
+      font-family: monospace;
+    }
+
+    .firebase-setup-box input::placeholder { color: #6a5a3a; }
+    .firebase-setup-box input:focus { border-color: var(--gold); }
+
+    .firebase-setup-box .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+      color: #0f0f1a;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s;
+      margin-top: 6px;
+    }
+
+    .firebase-setup-box .btn-login:hover { opacity: .9; }
+
+    .setup-note {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 9px;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: var(--dark-muted);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .setup-note strong { color: var(--gold-light); }
+    .setup-note a { color: var(--gold); }
+
+    .setup-error { color: #ff6b6b; font-size: 12px; margin-top: 10px; text-align: center; }
 
     /* ─── ADMIN PANEL ─── */
     .admin-panel {
@@ -860,8 +1004,59 @@
 </head>
 <body>
 
+<!-- ══════════════ LOADING SCREEN ══════════════ -->
+<div id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Connecting…</div>
+</div>
+
+<!-- ══════════════ FIREBASE SETUP PAGE ══════════════ -->
+<div id="firebaseSetupPage" style="display:none; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 50%,#0f0f1a 100%); position:relative;">
+  <div class="firebase-setup-box">
+    <h2>☁️ Cloud Sync Setup</h2>
+    <p>Enter your Firebase project credentials to enable real-time sync across all devices (PC, phone, tablet).</p>
+
+    <div class="setup-note">
+      <strong>How to get these values:</strong><br>
+      1. Go to <a href="[console.firebase.google.com](https://console.firebase.google.com)" target="_blank">console.firebase.google.com</a><br>
+      2. Create a project → Add a web app<br>
+      3. Copy the <strong>firebaseConfig</strong> values below<br>
+      4. Enable <strong>Realtime Database</strong> → Start in <strong>test mode</strong>
+    </div>
+
+    <label>API Key</label>
+    <input type="text" id="fbApiKey" placeholder="AIzaSy..." />
+
+    <label>Auth Domain</label>
+    <input type="text" id="fbAuthDomain" placeholder="your-project.firebaseapp.com" />
+
+    <label>Database URL</label>
+    <input type="text" id="fbDatabaseUrl" placeholder="[your-project-default-rtdb.firebaseio.com](https://your-project-default-rtdb.firebaseio.com)" />
+
+    <label>Project ID</label>
+    <input type="text" id="fbProjectId" placeholder="your-project-id" />
+
+    <label>App ID</label>
+    <input type="text" id="fbAppId" placeholder="1:123456789:web:abc..." />
+
+    <button class="btn-login" onclick="saveFirebaseConfig()">Connect & Continue</button>
+    <div class="setup-error" id="setupError"></div>
+
+    <p style="margin-top:18px; font-size:11px;">
+      Already configured on another device?
+      <a class="forgot-link" onclick="showImportConfig()" style="font-size:11px;">Import config code</a>
+    </p>
+
+    <div id="importConfigArea" style="display:none; margin-top:12px;">
+      <label>Paste config code</label>
+      <input type="text" id="importConfigInput" placeholder="Paste the code from your other device" />
+      <button class="btn-login" style="margin-top:6px;" onclick="doImportConfig()">Import</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════ LOGIN PAGE ══════════════ -->
-<div id="loginPage" style="display:flex;">
+<div id="loginPage">
   <div class="login-box">
     <div class="login-logo" id="loginLogoBox">
       <span class="login-logo-fallback">⛪</span>
@@ -886,7 +1081,6 @@
 <div id="forgotPage">
   <div class="forgot-box">
 
-    <!-- Step 1: MRN Verification -->
     <div id="forgotStep1">
       <h2>Forgot Password</h2>
       <p class="forgot-desc">
@@ -898,7 +1092,6 @@
       <div class="forgot-error" id="forgotError"></div>
     </div>
 
-    <!-- Step 2: Set New Password -->
     <div id="forgotStep2">
       <h2>Reset Password</h2>
       <p class="forgot-desc">MRN verified. Enter your new password below.</p>
@@ -939,7 +1132,6 @@
     </div>
   </div>
 
-  <!-- Idle warning bar -->
   <div id="idleWarning">
     ⚠️ You've been idle for 55 minutes. You will be logged out in 5 minutes.
     <button onclick="resetIdleTimer()">Stay Logged In</button>
@@ -953,6 +1145,9 @@
   <div class="tabs-wrapper" id="tabsWrapper"></div>
   <div id="tabContents"></div>
 </div>
+
+<!-- ══════════════ SYNC INDICATOR ══════════════ -->
+<div id="syncIndicator"></div>
 
 <!-- ══════════════ CARD MODAL ══════════════ -->
 <div class="modal-overlay" id="cardModal">
@@ -1085,6 +1280,13 @@
     <input type="text" id="settingsAdminUnit" placeholder="e.g. Tubod Stake" />
     <label>Logo Image URL (GitHub raw or web)</label>
     <input type="url" id="settingsLogoUrl" placeholder="[raw.githubusercontent.com](https://raw.githubusercontent.com/)" />
+
+    <div style="margin-top:14px; padding:10px 14px; background:#f0f2f8; border-radius:8px; font-size:11px; color:#666;">
+      <strong>📤 Share config with other devices:</strong><br>
+      <span id="exportConfigText" style="font-family:monospace; word-break:break-all;"></span><br>
+      <button class="btn-sm btn-sm-edit" style="margin-top:6px;" onclick="copyExportConfig()">Copy Code</button>
+    </div>
+
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal('settingsModal')">Cancel</button>
       <button class="btn-primary" onclick="saveSettings()">Save</button>
@@ -1094,6 +1296,10 @@
 
 <!-- ══════════════ TOAST ══════════════ -->
 <div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="[gstatic.com](https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js)"></script>
+<script src="[gstatic.com](https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js)"></script>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -1114,199 +1320,71 @@ const ICONS = [
 // ══════════════════════════════════════════════════════
 //  CONSTANTS
 // ══════════════════════════════════════════════════════
-const DB_KEY      = 'clerksportal_v2';
-const SESSION_KEY = 'clerksportal_session';
-const DARK_KEY    = 'clerksportal_dark';
-const IDLE_LIMIT  = 60 * 60 * 1000;   // 1 hour in ms
-const WARN_BEFORE = 5  * 60 * 1000;   // warn 5 min before logout
+const FB_CONFIG_KEY  = 'clerksportal_fb_config';
+const SESSION_KEY    = 'clerksportal_session';
+const DARK_KEY       = 'clerksportal_dark';
+const IDLE_LIMIT     = 60 * 60 * 1000;
+const WARN_BEFORE    = 5  * 60 * 1000;
 
 // ══════════════════════════════════════════════════════
-//  DATA STORE
+//  DEFAULT DATA (used only when Firebase is empty)
 // ══════════════════════════════════════════════════════
-function loadData() {
-  const raw = localStorage.getItem(DB_KEY);
-  if (raw) { try { return JSON.parse(raw); } catch(e) {} }
-  return {
-    settings: {
-      name: "Philippines Tubod Stake Portal",
-      subtitle: "Your complete toolkit for ward & branch administration",
-      adminUnit: "Tubod Stake",
-      logoUrl: ""
+const DEFAULT_DATA = {
+  settings: {
+    name: "Philippines Tubod Stake Portal",
+    subtitle: "Your complete toolkit for ward & branch administration",
+    adminUnit: "Tubod Stake",
+    logoUrl: ""
+  },
+  users: {
+    u1: {
+      id: 'u1', username: 'admin', password: 'admin123', role: 'admin',
+      fullName: 'Administrator', email: 'admin@example.com',
+      phone: '', mrn: '000-0000-0001', calling: 'Stake Clerk', unit: 'Tubod Stake',
+      visibility: null
     },
-    users: [
-      {
-        id: 1, username: 'admin', password: 'admin123', role: 'admin',
-        fullName: 'Administrator', email: 'admin@example.com',
-        phone: '', mrn: '000-0000-0001', calling: 'Stake Clerk', unit: 'Tubod Stake',
-        visibility: null
-      },
-      {
-        id: 2, username: 'clerk', password: 'clerk123', role: 'user',
-        fullName: 'Ward Clerk', email: 'clerk@example.com',
-        phone: '', mrn: '000-0000-0002', calling: 'Ward Clerk', unit: 'Alegria Ward',
-        visibility: null
-      }
-    ],
-    tabs: [
-      { id: 1, name: 'Membership' },
-      { id: 2, name: 'Finance' },
-      { id: 3, name: 'Resources' },
-      { id: 4, name: 'Directories' }
-    ],
-    cards: [
-      { id: 1, tabId: 1, title: 'Member Records',  desc: 'Access and update member records',         link: '', icon: '👥', colSpan: 1 },
-      { id: 2, tabId: 1, title: 'Calling Tools',   desc: 'Manage callings and assignments',           link: '', icon: '📋', colSpan: 1 },
-      { id: 3, tabId: 1, title: 'Attendance',       desc: 'Track sacrament meeting attendance',        link: '', icon: '📅', colSpan: 1 },
-      { id: 4, tabId: 2, title: 'Fast Offering',    desc: 'Fast offering records and reports',         link: '', icon: '💰', colSpan: 1 },
-      { id: 5, tabId: 2, title: 'Budget Report',    desc: 'Ward budget and expenses',                  link: '', icon: '📊', colSpan: 1 },
-      { id: 6, tabId: 3, title: 'Handbook',         desc: 'General Handbook of Instructions',
-        link: '[churchofjesuschrist.org](https://www.churchofjesuschrist.org/study/manual/general-handbook)', icon: '📖', colSpan: 1 },
-      { id: 7, tabId: 3, title: 'Directories',      desc: 'Ward directory and contact info',           link: '', icon: '📁', colSpan: 1 }
-    ]
-  };
-}
+    u2: {
+      id: 'u2', username: 'clerk', password: 'clerk123', role: 'user',
+      fullName: 'Ward Clerk', email: 'clerk@example.com',
+      phone: '', mrn: '000-0000-0002', calling: 'Ward Clerk', unit: 'Alegria Ward',
+      visibility: null
+    }
+  },
+  tabs: {
+    t1: { id: 't1', name: 'Membership', order: 0 },
+    t2: { id: 't2', name: 'Finance',    order: 1 },
+    t3: { id: 't3', name: 'Resources',  order: 2 },
+    t4: { id: 't4', name: 'Directories',order: 3 }
+  },
+  cards: {
+    c1: { id: 'c1', tabId: 't1', title: 'Member Records',  desc: 'Access and update member records',       link: '', icon: '👥', colSpan: 1, order: 0 },
+    c2: { id: 'c2', tabId: 't1', title: 'Calling Tools',   desc: 'Manage callings and assignments',         link: '', icon: '📋', colSpan: 1, order: 1 },
+    c3: { id: 'c3', tabId: 't1', title: 'Attendance',       desc: 'Track sacrament meeting attendance',      link: '', icon: '📅', colSpan: 1, order: 2 },
+    c4: { id: 'c4', tabId: 't2', title: 'Fast Offering',    desc: 'Fast offering records and reports',       link: '', icon: '💰', colSpan: 1, order: 0 },
+    c5: { id: 'c5', tabId: 't2', title: 'Budget Report',    desc: 'Ward budget and expenses',                link: '', icon: '📊', colSpan: 1, order: 1 },
+    c6: { id: 'c6', tabId: 't3', title: 'Handbook',         desc: 'General Handbook of Instructions',
+          link: '[churchofjesuschrist.org](https://www.churchofjesuschrist.org/study/manual/general-handbook)', icon: '📖', colSpan: 1, order: 0 },
+    c7: { id: 'c7', tabId: 't3', title: 'Directories',      desc: 'Ward directory and contact info',         link: '', icon: '📁', colSpan: 1, order: 1 }
+  }
+};
 
-function saveData() {
-  localStorage.setItem(DB_KEY, JSON.stringify(db));
-  // Broadcast to other tabs/windows in the same browser
-  try { bc.postMessage({ type: 'db_update' }); } catch(e) {}
-}
-
-let db = loadData();
-let currentUser       = null;
-let editingCardId     = null;
-let editingTabId      = null;
-let editingUserId     = null;
-let activeTabId       = null;
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let db            = { settings: {}, users: {}, tabs: {}, cards: {} };
+let firebaseApp   = null;
+let firebaseDb    = null;
+let dbRef         = null;
+let currentUser   = null;
+let activeTabId   = null;
+let editingCardId = null;
+let editingTabId  = null;
+let editingUserId = null;
 let visibilityUserId  = null;
 let pendingVisibility = null;
 let forgotVerifiedUserId = null;
-
-// ══════════════════════════════════════════════════════
-//  BROADCAST CHANNEL (same-browser cross-tab sync)
-// ══════════════════════════════════════════════════════
-let bc;
-try {
-  bc = new BroadcastChannel('clerksportal_sync');
-  bc.onmessage = (e) => {
-    if (e.data && e.data.type === 'db_update') {
-      db = loadData();
-      if (currentUser) {
-        // Refresh current user object from updated db
-        const refreshed = db.users.find(u => u.id === currentUser.id);
-        if (refreshed) currentUser = refreshed;
-        renderPortal();
-      }
-    }
-    if (e.data && e.data.type === 'force_logout') {
-      performLogout();
-    }
-  };
-} catch(e) {
-  bc = { postMessage: () => {} };
-}
-
-// ══════════════════════════════════════════════════════
-//  CROSS-DEVICE SYNC via storage event
-//  (fires when another browser window/tab writes localStorage)
-// ══════════════════════════════════════════════════════
-window.addEventListener('storage', (e) => {
-  if (e.key === DB_KEY) {
-    db = loadData();
-    if (currentUser) {
-      const refreshed = db.users.find(u => u.id === currentUser.id);
-      if (refreshed) currentUser = refreshed;
-      renderPortal();
-    }
-  }
-});
-
-// ══════════════════════════════════════════════════════
-//  SESSION PERSISTENCE
-// ══════════════════════════════════════════════════════
-function saveSession(userId) {
-  const session = { userId, savedAt: Date.now() };
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-}
-
-function clearSession() {
-  localStorage.removeItem(SESSION_KEY);
-}
-
-function restoreSession() {
-  try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return false;
-    const session = JSON.parse(raw);
-    if (!session || !session.userId) return false;
-
-    // Check if session has been idle past the limit since last activity
-    const lastActivity = parseInt(localStorage.getItem('clerksportal_last_activity') || '0', 10);
-    const now = Date.now();
-    const reference = lastActivity || session.savedAt;
-    if (now - reference > IDLE_LIMIT) {
-      clearSession();
-      return false;
-    }
-
-    const user = db.users.find(u => u.id === session.userId);
-    if (!user) { clearSession(); return false; }
-
-    currentUser = user;
-    return true;
-  } catch(e) {
-    return false;
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  IDLE TIMER
-// ══════════════════════════════════════════════════════
-let idleTimer       = null;
-let warnTimer       = null;
-let idleWarningShown = false;
-
-function resetIdleTimer() {
-  localStorage.setItem('clerksportal_last_activity', Date.now().toString());
-  hideIdleWarning();
-  clearTimeout(idleTimer);
-  clearTimeout(warnTimer);
-  if (!currentUser) return;
-
-  // Show warning 5 min before logout
-  warnTimer = setTimeout(() => {
-    showIdleWarning();
-  }, IDLE_LIMIT - WARN_BEFORE);
-
-  // Auto logout at 1 hour
-  idleTimer = setTimeout(() => {
-    hideIdleWarning();
-    clearSession();
-    performLogout(true);
-  }, IDLE_LIMIT);
-}
-
-function showIdleWarning() {
-  idleWarningShown = true;
-  document.getElementById('idleWarning').classList.add('show');
-}
-
-function hideIdleWarning() {
-  idleWarningShown = false;
-  document.getElementById('idleWarning').classList.remove('show');
-}
-
-function startIdleTracking() {
-  const events = ['mousemove','mousedown','keydown','touchstart','scroll','click'];
-  events.forEach(ev => document.addEventListener(ev, resetIdleTimer, { passive: true }));
-  resetIdleTimer();
-}
-
-function stopIdleTracking() {
-  clearTimeout(idleTimer);
-  clearTimeout(warnTimer);
-  hideIdleWarning();
-}
+let isSaving      = false;
+let saveDebounce  = null;
 
 // ══════════════════════════════════════════════════════
 //  UTILITIES
@@ -1334,12 +1412,204 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('open');
 }
 
+function showSyncIndicator(state) {
+  const el = document.getElementById('syncIndicator');
+  el.className = '';
+  if (state === 'syncing') {
+    el.textContent = '⟳ Saving…';
+    el.classList.add('syncing');
+  } else if (state === 'synced') {
+    el.textContent = '✓ Synced';
+    el.classList.add('synced');
+    setTimeout(() => { el.style.opacity = '0'; }, 2000);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  FIREBASE CONFIG MANAGEMENT
+// ══════════════════════════════════════════════════════
+function getStoredFbConfig() {
+  try {
+    const raw = localStorage.getItem(FB_CONFIG_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
+}
+
+function storeFbConfig(cfg) {
+  localStorage.setItem(FB_CONFIG_KEY, JSON.stringify(cfg));
+}
+
+function generateExportCode(cfg) {
+  return btoa(JSON.stringify(cfg));
+}
+
+function parseImportCode(code) {
+  try { return JSON.parse(atob(code.trim())); } catch(e) { return null; }
+}
+
+function showImportConfig() {
+  const area = document.getElementById('importConfigArea');
+  area.style.display = area.style.display === 'none' ? 'block' : 'none';
+}
+
+function doImportConfig() {
+  const code = document.getElementById('importConfigInput').value.trim();
+  const cfg = parseImportCode(code);
+  if (!cfg || !cfg.apiKey || !cfg.databaseURL) {
+    document.getElementById('setupError').textContent = 'Invalid config code. Please check and try again.';
+    return;
+  }
+  storeFbConfig(cfg);
+  document.getElementById('setupError').textContent = '';
+  initFirebase(cfg);
+}
+
+function saveFirebaseConfig() {
+  const cfg = {
+    apiKey:      document.getElementById('fbApiKey').value.trim(),
+    authDomain:  document.getElementById('fbAuthDomain').value.trim(),
+    databaseURL: document.getElementById('fbDatabaseUrl').value.trim(),
+    projectId:   document.getElementById('fbProjectId').value.trim(),
+    appId:       document.getElementById('fbAppId').value.trim()
+  };
+  const errEl = document.getElementById('setupError');
+  if (!cfg.apiKey || !cfg.databaseURL || !cfg.projectId) {
+    errEl.textContent = 'API Key, Database URL, and Project ID are required.';
+    return;
+  }
+  if (!cfg.databaseURL.startsWith('https://')) {
+    errEl.textContent = 'Database URL must start with https://';
+    return;
+  }
+  errEl.textContent = '';
+  storeFbConfig(cfg);
+  initFirebase(cfg);
+}
+
+// ══════════════════════════════════════════════════════
+//  FIREBASE INIT & REALTIME LISTENER
+// ══════════════════════════════════════════════════════
+function initFirebase(cfg) {
+  showLoadingScreen();
+  try {
+    if (firebaseApp) {
+      try { firebaseApp.delete(); } catch(e) {}
+    }
+    firebaseApp = firebase.initializeApp(cfg, 'clerksportal_' + Date.now());
+    firebaseDb  = firebase.database(firebaseApp);
+    dbRef       = firebaseDb.ref('portalData');
+
+    // Test connection and load data
+    dbRef.once('value').then(snapshot => {
+      const data = snapshot.val();
+      if (!data) {
+        // First time: seed with default data
+        dbRef.set(DEFAULT_DATA).then(() => {
+          db = JSON.parse(JSON.stringify(DEFAULT_DATA));
+          startRealtimeListener();
+          hideLoadingScreen();
+          checkSessionAndShow();
+        }).catch(err => {
+          showSetupError('Could not write to database: ' + err.message);
+        });
+      } else {
+        db = sanitizeDb(data);
+        startRealtimeListener();
+        hideLoadingScreen();
+        checkSessionAndShow();
+      }
+    }).catch(err => {
+      showSetupError('Cannot connect to Firebase. Check your config: ' + err.message);
+    });
+
+  } catch(err) {
+    showSetupError('Firebase init error: ' + err.message);
+  }
+}
+
+function showSetupError(msg) {
+  hideLoadingScreen();
+  hidePage('loginPage');
+  hidePage('portalPage');
+  hidePage('forgotPage');
+  document.getElementById('firebaseSetupPage').style.display = 'flex';
+  document.getElementById('setupError').textContent = msg;
+}
+
+function sanitizeDb(data) {
+  return {
+    settings: data.settings || DEFAULT_DATA.settings,
+    users:    data.users    || {},
+    tabs:     data.tabs     || {},
+    cards:    data.cards    || {}
+  };
+}
+
+function startRealtimeListener() {
+  // Listen for any changes in Firebase and update local db
+  dbRef.on('value', snapshot => {
+    const data = snapshot.val();
+    if (!data) return;
+    db = sanitizeDb(data);
+
+    // Refresh currentUser if logged in
+    if (currentUser) {
+      const refreshed = getUsersArray().find(u => u.id === currentUser.id);
+      if (refreshed) {
+        currentUser = refreshed;
+        saveSession(currentUser.id);
+      }
+      renderPortal();
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  SAVE TO FIREBASE (debounced)
+// ══════════════════════════════════════════════════════
+function saveData(immediate) {
+  if (immediate) {
+    _doSave();
+  } else {
+    clearTimeout(saveDebounce);
+    saveDebounce = setTimeout(_doSave, 400);
+  }
+}
+
+function _doSave() {
+  if (!dbRef) return;
+  showSyncIndicator('syncing');
+  dbRef.set(db).then(() => {
+    showSyncIndicator('synced');
+  }).catch(err => {
+    showToast('⚠️ Sync failed: ' + err.message, 5000);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  DB ARRAY HELPERS (Firebase uses objects, we need arrays)
+// ══════════════════════════════════════════════════════
+function getUsersArray() {
+  return Object.values(db.users || {});
+}
+
+function getTabsArray() {
+  return Object.values(db.tabs || {}).sort((a,b) => (a.order||0) - (b.order||0));
+}
+
+function getCardsArray() {
+  return Object.values(db.cards || {}).sort((a,b) => (a.order||0) - (b.order||0));
+}
+
+function genId(prefix) {
+  return prefix + Date.now() + Math.random().toString(36).slice(2,6);
+}
+
 // ══════════════════════════════════════════════════════
 //  LOGO
 // ══════════════════════════════════════════════════════
 function applyLogo() {
   const url = (db.settings.logoUrl || '').trim();
-
   const lb = document.getElementById('loginLogoBox');
   if (url) {
     lb.innerHTML = `<img src="${escHtml(url)}" alt="logo"
@@ -1348,7 +1618,6 @@ function applyLogo() {
   } else {
     lb.innerHTML = `<span class="login-logo-fallback">⛪</span>`;
   }
-
   const tb = document.getElementById('topbarLogoBox');
   if (url) {
     tb.innerHTML = `<img src="${escHtml(url)}" class="topbar-logo" alt="logo"
@@ -1362,14 +1631,15 @@ function applyLogo() {
 // ══════════════════════════════════════════════════════
 //  PAGE SHOW / HIDE
 // ══════════════════════════════════════════════════════
-function hidePage(id) { document.getElementById(id).style.display = 'none'; }
-function showPage(id, flex) {
-  document.getElementById(id).style.display = flex ? 'flex' : 'block';
-}
+function showLoadingScreen()  { document.getElementById('loadingScreen').style.display = 'flex'; }
+function hideLoadingScreen()  { document.getElementById('loadingScreen').style.display = 'none'; }
+function hidePage(id)         { document.getElementById(id).style.display = 'none'; }
+function showPage(id, flex)   { document.getElementById(id).style.display = flex ? 'flex' : 'block'; }
 
 function showLogin() {
   hidePage('forgotPage');
   hidePage('portalPage');
+  hidePage('firebaseSetupPage');
   showPage('loginPage', true);
   document.getElementById('loginError').textContent = '';
   forgotVerifiedUserId = null;
@@ -1395,12 +1665,83 @@ function resetForgotFlow() {
 }
 
 // ══════════════════════════════════════════════════════
+//  SESSION
+// ══════════════════════════════════════════════════════
+function saveSession(userId) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ userId, savedAt: Date.now() }));
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+function checkSessionAndShow() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) { showLogin(); return; }
+    const session = JSON.parse(raw);
+    if (!session || !session.userId) { showLogin(); return; }
+
+    const lastActivity = parseInt(localStorage.getItem('clerksportal_last_activity') || '0', 10);
+    const reference = lastActivity || session.savedAt;
+    if (Date.now() - reference > IDLE_LIMIT) { clearSession(); showLogin(); return; }
+
+    const user = getUsersArray().find(u => u.id === session.userId);
+    if (!user) { clearSession(); showLogin(); return; }
+
+    currentUser = user;
+    hidePage('loginPage');
+    hidePage('firebaseSetupPage');
+    showPage('portalPage', false);
+    startIdleTracking();
+    renderPortal();
+  } catch(e) {
+    showLogin();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  IDLE TIMER
+// ══════════════════════════════════════════════════════
+let idleTimer       = null;
+let warnTimer       = null;
+
+function resetIdleTimer() {
+  localStorage.setItem('clerksportal_last_activity', Date.now().toString());
+  hideIdleWarning();
+  clearTimeout(idleTimer);
+  clearTimeout(warnTimer);
+  if (!currentUser) return;
+  warnTimer = setTimeout(showIdleWarning, IDLE_LIMIT - WARN_BEFORE);
+  idleTimer = setTimeout(() => {
+    hideIdleWarning();
+    clearSession();
+    performLogout(true);
+  }, IDLE_LIMIT);
+}
+
+function showIdleWarning() { document.getElementById('idleWarning').classList.add('show'); }
+function hideIdleWarning() { document.getElementById('idleWarning').classList.remove('show'); }
+
+function startIdleTracking() {
+  const events = ['mousemove','mousedown','keydown','touchstart','scroll','click'];
+  events.forEach(ev => document.addEventListener(ev, resetIdleTimer, { passive: true }));
+  resetIdleTimer();
+}
+
+function stopIdleTracking() {
+  clearTimeout(idleTimer);
+  clearTimeout(warnTimer);
+  hideIdleWarning();
+}
+
+// ══════════════════════════════════════════════════════
 //  AUTH — LOGIN
 // ══════════════════════════════════════════════════════
 function doLogin() {
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
-  const found = db.users.find(x => x.username === u && x.password === p);
+  const found = getUsersArray().find(x => x.username === u && x.password === p);
   if (!found) {
     document.getElementById('loginError').textContent = 'Invalid username or password.';
     return;
@@ -1423,15 +1764,10 @@ function performLogout(idleExpired = false) {
   document.getElementById('loginPass').value = '';
   document.getElementById('loginError').textContent = '';
   activeTabId = null;
-  if (idleExpired) {
-    showToast('You were logged out due to inactivity.', 4000);
-  }
+  if (idleExpired) showToast('You were logged out due to inactivity.', 4000);
 }
 
-function doLogout() {
-  try { bc.postMessage({ type: 'force_logout' }); } catch(e) {}
-  performLogout(false);
-}
+function doLogout() { performLogout(false); }
 
 document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
@@ -1443,25 +1779,14 @@ function doVerifyMrn() {
   const mrn   = document.getElementById('forgotMrn').value.trim();
   const errEl = document.getElementById('forgotError');
   errEl.textContent = '';
-
   if (!mrn) { errEl.textContent = 'Please enter your Member Record Number (MRN).'; return; }
-
   const normalize = s => s.replace(/[-\s]/g, '').toLowerCase();
-  const user = db.users.find(u => u.mrn && normalize(u.mrn) === normalize(mrn));
-
-  if (!user) {
-    errEl.textContent = 'No account found with that MRN. Please check the number and try again.';
-    return;
-  }
-
+  const user = getUsersArray().find(u => u.mrn && normalize(u.mrn) === normalize(mrn));
+  if (!user) { errEl.textContent = 'No account found with that MRN.'; return; }
   forgotVerifiedUserId = user.id;
   document.getElementById('forgotVerifiedName').textContent = user.fullName || user.username;
   document.getElementById('forgotStep1').style.display = 'none';
   document.getElementById('forgotStep2').style.display = 'block';
-  document.getElementById('forgotNewPass1').value = '';
-  document.getElementById('forgotNewPass2').value = '';
-  document.getElementById('forgotResetError').textContent = '';
-  document.getElementById('forgotResetSuccess').textContent = '';
 }
 
 function doResetFromMrn() {
@@ -1471,40 +1796,30 @@ function doResetFromMrn() {
   const okEl  = document.getElementById('forgotResetSuccess');
   errEl.textContent = '';
   okEl.textContent  = '';
-
   if (!p1 || p1.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
   if (p1 !== p2)             { errEl.textContent = 'Passwords do not match.'; return; }
-  if (!forgotVerifiedUserId) {
-    errEl.textContent = 'Session expired. Please start over.';
-    resetForgotFlow();
-    return;
-  }
-
-  const user = db.users.find(u => u.id === forgotVerifiedUserId);
+  if (!forgotVerifiedUserId) { errEl.textContent = 'Session expired. Please start over.'; resetForgotFlow(); return; }
+  const user = db.users[forgotVerifiedUserId];
   if (!user) { errEl.textContent = 'User not found.'; return; }
-
   user.password = p1;
-  saveData();
+  saveData(true);
   forgotVerifiedUserId = null;
-  okEl.textContent = '✅ Password updated successfully! Redirecting to login...';
+  okEl.textContent = '✅ Password updated! Redirecting to login…';
   setTimeout(() => showLogin(), 2200);
 }
 
-document.getElementById('forgotMrn').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doVerifyMrn();
-});
+document.getElementById('forgotMrn').addEventListener('keydown', e => { if (e.key === 'Enter') doVerifyMrn(); });
 
 // ══════════════════════════════════════════════════════
 //  PORTAL RENDER
 // ══════════════════════════════════════════════════════
 function renderPortal() {
   applyLogo();
-
   const isAdmin    = currentUser.role === 'admin';
   const portalName = db.settings.name || "Clerk's Portal";
   const unitName   = isAdmin ? (db.settings.adminUnit || '') : (currentUser.unit || '');
+  const brandEl    = document.getElementById('portalBrandFull');
 
-  const brandEl = document.getElementById('portalBrandFull');
   if (unitName) {
     brandEl.innerHTML = `${escHtml(portalName)}: <span class="branch-name">${escHtml(unitName)}</span>`;
   } else {
@@ -1517,8 +1832,9 @@ function renderPortal() {
   document.getElementById('loginPortalName').textContent      = portalName;
   document.getElementById('loginPortalSubtitle').textContent  = db.settings.subtitle || '';
 
-  if (!activeTabId || (!db.tabs.find(t => t.id === activeTabId) && activeTabId !== 'admin')) {
-    activeTabId = db.tabs[0]?.id || null;
+  const tabs = getTabsArray();
+  if (!activeTabId || (!tabs.find(t => t.id === activeTabId) && activeTabId !== 'admin')) {
+    activeTabId = tabs[0]?.id || null;
   }
 
   renderTabs();
@@ -1530,8 +1846,7 @@ function renderTabs() {
   const isAdmin = currentUser.role === 'admin';
   const tw = document.getElementById('tabsWrapper');
   tw.innerHTML = '';
-
-  db.tabs.forEach(tab => {
+  getTabsArray().forEach(tab => {
     if (!isAdmin && !canSeeTab(currentUser, tab.id)) return;
     const btn = document.createElement('button');
     btn.className = 'tab-btn' + (tab.id === activeTabId ? ' active' : '');
@@ -1539,7 +1854,6 @@ function renderTabs() {
     btn.onclick = () => setActiveTab(tab.id);
     tw.appendChild(btn);
   });
-
   if (isAdmin) {
     const ab = document.createElement('button');
     ab.className = 'tab-btn' + (activeTabId === 'admin' ? ' active' : '');
@@ -1575,18 +1889,15 @@ function renderTabContent() {
   const tc = document.getElementById('tabContents');
   tc.innerHTML = '';
 
-  if (activeTabId === 'admin') {
-    renderAdminTab(tc);
-    return;
-  }
+  if (activeTabId === 'admin') { renderAdminTab(tc); return; }
 
-  const tab = db.tabs.find(t => t.id === activeTabId);
+  const tab = getTabsArray().find(t => t.id === activeTabId);
   if (!tab) return;
 
   const div = document.createElement('div');
   div.className = 'tab-content active';
 
-  const cards = db.cards.filter(c => {
+  const cards = getCardsArray().filter(c => {
     if (c.tabId !== activeTabId) return false;
     if (!isAdmin && !canSeeCard(currentUser, c.id)) return false;
     return true;
@@ -1603,7 +1914,6 @@ function renderTabContent() {
 
     const c = document.createElement('div');
     c.className = 'card' + (card.link ? ' clickable' : '');
-
     const isHiddenFromSomeone = isAdmin && isCardHiddenFromAnyUser(card.id);
 
     c.innerHTML = `
@@ -1613,9 +1923,9 @@ function renderTabContent() {
       <p>${escHtml(card.desc || '')}</p>
       ${isAdmin ? `
         <div class="admin-actions">
-          <button class="btn-edit"   onclick="openEditCard(event,${card.id})">✏️</button>
-          <button class="btn-hide"   onclick="openVisForCard(event,${card.id})">👁</button>
-          <button class="btn-delete" onclick="deleteCard(event,${card.id})">🗑</button>
+          <button class="btn-edit"   onclick="openEditCard(event,'${card.id}')">✏️</button>
+          <button class="btn-hide"   onclick="openVisForCard(event,'${card.id}')">👁</button>
+          <button class="btn-delete" onclick="deleteCard(event,'${card.id}')">🗑</button>
         </div>` : ''}
     `;
 
@@ -1626,7 +1936,6 @@ function renderTabContent() {
       rh.className = 'resize-handle';
       rh.title = 'Drag to resize (1–3 columns)';
       let startX, startSpan;
-
       rh.addEventListener('mousedown', ev => {
         ev.preventDefault(); ev.stopPropagation();
         startX = ev.clientX; startSpan = card.colSpan || 1;
@@ -1643,7 +1952,6 @@ function renderTabContent() {
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', onUp);
       });
-
       rh.addEventListener('touchstart', ev => {
         ev.preventDefault();
         startX = ev.touches[0].clientX; startSpan = card.colSpan || 1;
@@ -1660,7 +1968,6 @@ function renderTabContent() {
         rh.addEventListener('touchmove', onMove);
         rh.addEventListener('touchend', onUp);
       }, { passive: false });
-
       wrapper.appendChild(rh);
     }
 
@@ -1681,7 +1988,7 @@ function renderTabContent() {
 }
 
 function isCardHiddenFromAnyUser(cardId) {
-  return db.users.some(u => {
+  return getUsersArray().some(u => {
     if (!u.visibility || !u.visibility.cards) return false;
     return !u.visibility.cards.includes(cardId);
   });
@@ -1695,18 +2002,16 @@ function renderAdminTab(tc) {
   div.className = 'tab-content active';
 
   div.innerHTML = `
-    <!-- Portal Settings -->
     <div class="admin-panel">
       <div class="admin-panel-header">
         <h3>🎨 Portal Settings</h3>
         <button class="btn-primary" onclick="openSettingsModal()">Edit Settings</button>
       </div>
       <p style="font-size:12px;color:#888;">
-        Manage portal name, subtitle, admin unit name, and logo.
+        Manage portal name, subtitle, admin unit name, and logo. Changes sync to all devices instantly.
       </p>
     </div>
 
-    <!-- Tab Management -->
     <div class="admin-panel">
       <div class="admin-panel-header">
         <h3>📑 Manage Tabs</h3>
@@ -1714,19 +2019,12 @@ function renderAdminTab(tc) {
       </div>
       <div style="overflow-x:auto;">
         <table class="users-table">
-          <thead>
-            <tr>
-              <th>Tab Name</th>
-              <th>Cards</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Tab Name</th><th>Cards</th><th>Actions</th></tr></thead>
           <tbody id="tabsTableBody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- User Management -->
     <div class="admin-panel">
       <div class="admin-panel-header">
         <h3>👥 Manage Users</h3>
@@ -1736,13 +2034,8 @@ function renderAdminTab(tc) {
         <table class="users-table">
           <thead>
             <tr>
-              <th>Username</th>
-              <th>Full Name</th>
-              <th>Calling</th>
-              <th>Unit</th>
-              <th>Role</th>
-              <th>Password</th>
-              <th>Actions</th>
+              <th>Username</th><th>Full Name</th><th>Calling</th>
+              <th>Unit</th><th>Role</th><th>Password</th><th>Actions</th>
             </tr>
           </thead>
           <tbody id="usersTableBody"></tbody>
@@ -1753,26 +2046,26 @@ function renderAdminTab(tc) {
 
   tc.appendChild(div);
 
-  // ── Tabs Table ──
+  // Tabs table
   const tabsBody = div.querySelector('#tabsTableBody');
-  db.tabs.forEach(tab => {
-    const count = db.cards.filter(c => c.tabId === tab.id).length;
+  getTabsArray().forEach(tab => {
+    const count = getCardsArray().filter(c => c.tabId === tab.id).length;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${escHtml(tab.name)}</td>
       <td>${count}</td>
       <td>
-        <button class="btn-sm btn-sm-edit"   onclick="openEditTab(${tab.id})">✏️ Edit</button>
+        <button class="btn-sm btn-sm-edit"   onclick="openEditTab('${tab.id}')">✏️ Edit</button>
         &nbsp;
-        <button class="btn-sm btn-sm-danger" onclick="deleteTab(${tab.id})">🗑 Delete</button>
+        <button class="btn-sm btn-sm-danger" onclick="deleteTab('${tab.id}')">🗑 Delete</button>
       </td>
     `;
     tabsBody.appendChild(tr);
   });
 
-  // ── Users Table ──
+  // Users table
   const usersBody = div.querySelector('#usersTableBody');
-  db.users.forEach(user => {
+  getUsersArray().forEach(user => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${escHtml(user.username)}</td>
@@ -1784,14 +2077,14 @@ function renderAdminTab(tc) {
         <button class="pw-reveal" onclick="togglePwDisplay(this,'${escHtml(user.password)}')">Show</button>
       </td>
       <td style="white-space:nowrap;">
-        <button class="btn-sm btn-sm-view" onclick="viewUser(${user.id})">👁 View</button>
+        <button class="btn-sm btn-sm-view" onclick="viewUser('${user.id}')">👁 View</button>
         &nbsp;
-        <button class="btn-sm btn-sm-edit" onclick="openEditUser(${user.id})">✏️ Edit</button>
+        <button class="btn-sm btn-sm-edit" onclick="openEditUser('${user.id}')">✏️ Edit</button>
         &nbsp;
-        <button class="btn-sm btn-sm-vis"  onclick="openVisibilityModal(${user.id})">🔒 Visibility</button>
+        <button class="btn-sm btn-sm-vis"  onclick="openVisibilityModal('${user.id}')">🔒 Vis</button>
         &nbsp;
         ${user.id !== currentUser.id
-          ? `<button class="btn-sm btn-sm-danger" onclick="deleteUser(${user.id})">🗑</button>`
+          ? `<button class="btn-sm btn-sm-danger" onclick="deleteUser('${user.id}')">🗑</button>`
           : '<em style="font-size:11px;color:#aaa;">You</em>'}
       </td>
     `;
@@ -1825,7 +2118,7 @@ function openAddCard(tabId) {
 
 function openEditCard(e, cardId) {
   e.stopPropagation();
-  const card = db.cards.find(c => c.id === cardId);
+  const card = db.cards[cardId];
   if (!card) return;
   editingCardId = cardId;
   document.getElementById('cardModalTitle').textContent = 'Edit Card';
@@ -1840,7 +2133,7 @@ function openEditCard(e, cardId) {
 function populateCardTabSelect(selectedTabId) {
   const sel = document.getElementById('cardTab');
   sel.innerHTML = '';
-  db.tabs.forEach(tab => {
+  getTabsArray().forEach(tab => {
     const opt = document.createElement('option');
     opt.value = tab.id;
     opt.textContent = tab.name;
@@ -1874,33 +2167,33 @@ function saveCard() {
   if (!title) { showToast('Card title is required.'); return; }
   const desc  = document.getElementById('cardDesc').value.trim();
   const link  = document.getElementById('cardLink').value.trim();
-  const tabId = parseInt(document.getElementById('cardTab').value);
+  const tabId = document.getElementById('cardTab').value;
   const icon  = getSelectedIcon();
 
   if (editingCardId) {
-    const card = db.cards.find(c => c.id === editingCardId);
+    const card = db.cards[editingCardId];
     Object.assign(card, { title, desc, link, tabId, icon });
   } else {
-    db.cards.push({ id: Date.now(), tabId, title, desc, link, icon, colSpan: 1 });
+    const id = genId('c');
+    const order = getCardsArray().filter(c => c.tabId === tabId).length;
+    db.cards[id] = { id, tabId, title, desc, link, icon, colSpan: 1, order };
   }
-  saveData();
+  saveData(true);
   closeCardModal();
   activeTabId = tabId;
-  renderPortal();
   showToast('Card saved.');
 }
 
 function deleteCard(e, cardId) {
   e.stopPropagation();
   if (!confirm('Delete this card?')) return;
-  db.cards = db.cards.filter(c => c.id !== cardId);
-  db.users.forEach(u => {
+  delete db.cards[cardId];
+  getUsersArray().forEach(u => {
     if (u.visibility && u.visibility.cards) {
       u.visibility.cards = u.visibility.cards.filter(id => id !== cardId);
     }
   });
-  saveData();
-  renderPortal();
+  saveData(true);
   showToast('Card deleted.');
 }
 
@@ -1917,7 +2210,7 @@ function openAddTab() {
 }
 
 function openEditTab(tabId) {
-  const tab = db.tabs.find(t => t.id === tabId);
+  const tab = db.tabs[tabId];
   if (!tab) return;
   editingTabId = tabId;
   document.getElementById('tabModalTitle').textContent = 'Edit Tab';
@@ -1929,32 +2222,32 @@ function saveTab() {
   const name = document.getElementById('tabNameInput').value.trim();
   if (!name) { showToast('Tab name is required.'); return; }
   if (editingTabId) {
-    db.tabs.find(t => t.id === editingTabId).name = name;
+    db.tabs[editingTabId].name = name;
   } else {
-    db.tabs.push({ id: Date.now(), name });
+    const id = genId('t');
+    const order = getTabsArray().length;
+    db.tabs[id] = { id, name, order };
   }
-  saveData();
+  saveData(true);
   closeTabModal();
   activeTabId = 'admin';
-  renderPortal();
   showToast('Tab saved.');
 }
 
 function deleteTab(tabId) {
-  if (db.tabs.length <= 1) { showToast('Cannot delete the last tab.'); return; }
+  if (getTabsArray().length <= 1) { showToast('Cannot delete the last tab.'); return; }
   if (!confirm('Delete this tab and all its cards?')) return;
-  db.tabs = db.tabs.filter(t => t.id !== tabId);
-  const removedCards = db.cards.filter(c => c.tabId === tabId).map(c => c.id);
-  db.cards = db.cards.filter(c => c.tabId !== tabId);
-  db.users.forEach(u => {
+  const removedCardIds = getCardsArray().filter(c => c.tabId === tabId).map(c => c.id);
+  delete db.tabs[tabId];
+  removedCardIds.forEach(cid => delete db.cards[cid]);
+  getUsersArray().forEach(u => {
     if (u.visibility) {
       if (u.visibility.tabs)  u.visibility.tabs  = u.visibility.tabs.filter(id => id !== tabId);
-      if (u.visibility.cards) u.visibility.cards = u.visibility.cards.filter(id => !removedCards.includes(id));
+      if (u.visibility.cards) u.visibility.cards = u.visibility.cards.filter(id => !removedCardIds.includes(id));
     }
   });
-  saveData();
-  activeTabId = db.tabs[0]?.id || null;
-  renderPortal();
+  saveData(true);
+  activeTabId = getTabsArray()[0]?.id || null;
   showToast('Tab deleted.');
 }
 
@@ -1973,7 +2266,7 @@ function openAddUser() {
 }
 
 function openEditUser(userId) {
-  const user = db.users.find(u => u.id === userId);
+  const user = db.users[userId];
   if (!user) return;
   editingUserId = userId;
   document.getElementById('userModalTitle').textContent = 'Edit User';
@@ -2003,41 +2296,41 @@ function saveUser() {
   if (!username)                    { showToast('Username is required.');  return; }
   if (!editingUserId && !password)  { showToast('Password is required.'); return; }
 
+  const users = getUsersArray();
+
   if (editingUserId) {
-    const dup = db.users.find(u => u.username === username && u.id !== editingUserId);
+    const dup = users.find(u => u.username === username && u.id !== editingUserId);
     if (dup) { showToast('Username already exists.'); return; }
-    const user = db.users.find(u => u.id === editingUserId);
+    const user = db.users[editingUserId];
     Object.assign(user, {
       username, fullName, email, phone, mrn, calling, unit, role,
       password: password || user.password
     });
-    // If the current logged-in user was edited, update currentUser reference
     if (currentUser && currentUser.id === editingUserId) {
       currentUser = user;
       saveSession(user.id);
     }
   } else {
-    if (db.users.find(u => u.username === username)) { showToast('Username already exists.'); return; }
-    db.users.push({ id: Date.now(), username, password, role, fullName, email, phone, mrn, calling, unit, visibility: null });
+    if (users.find(u => u.username === username)) { showToast('Username already exists.'); return; }
+    const id = genId('u');
+    db.users[id] = { id, username, password, role, fullName, email, phone, mrn, calling, unit, visibility: null };
   }
 
-  saveData();
+  saveData(true);
   closeUserModal();
   activeTabId = 'admin';
-  renderPortal();
   showToast('User saved.');
 }
 
 function deleteUser(userId) {
   if (!confirm('Remove this user?')) return;
-  db.users = db.users.filter(u => u.id !== userId);
-  saveData();
-  renderPortal();
+  delete db.users[userId];
+  saveData(true);
   showToast('User removed.');
 }
 
 function viewUser(userId) {
-  const user = db.users.find(u => u.id === userId);
+  const user = db.users[userId];
   if (!user) return;
   document.getElementById('userViewContent').innerHTML = `
     <table style="width:100%;font-size:13px;border-collapse:collapse;">
@@ -2068,19 +2361,19 @@ function closeUserModal() { document.getElementById('userModal').classList.remov
 //  VISIBILITY (per-user tab & card access)
 // ══════════════════════════════════════════════════════
 function openVisibilityModal(userId) {
-  const user = db.users.find(u => u.id === userId);
+  const user = db.users[userId];
   if (!user) return;
   visibilityUserId = userId;
   document.getElementById('visModalTitle').textContent =
     `Visibility — ${user.fullName || user.username}`;
 
+  const allTabIds  = getTabsArray().map(t => t.id);
+  const allCardIds = getCardsArray().map(c => c.id);
+
   if (user.visibility) {
     pendingVisibility = JSON.parse(JSON.stringify(user.visibility));
   } else {
-    pendingVisibility = {
-      tabs:  db.tabs.map(t => t.id),
-      cards: db.cards.map(c => c.id)
-    };
+    pendingVisibility = { tabs: [...allTabIds], cards: [...allCardIds] };
   }
 
   buildVisGrid();
@@ -2090,12 +2383,10 @@ function openVisibilityModal(userId) {
 function buildVisGrid() {
   const grid = document.getElementById('visibilityGrid');
   grid.innerHTML = '';
-
-  db.tabs.forEach(tab => {
+  getTabsArray().forEach(tab => {
     const tabChecked = pendingVisibility.tabs.includes(tab.id);
-    const tabCards   = db.cards.filter(c => c.tabId === tab.id);
-
-    const section = document.createElement('div');
+    const tabCards   = getCardsArray().filter(c => c.tabId === tab.id);
+    const section    = document.createElement('div');
     section.className = 'vis-tab-section';
 
     const tabRow = document.createElement('div');
@@ -2108,10 +2399,8 @@ function buildVisGrid() {
 
     const tabChk = document.createElement('input');
     tabChk.type    = 'checkbox';
-    tabChk.id      = `visTab_${tab.id}`;
     tabChk.checked = tabChecked;
     tabChk.addEventListener('change', () => onVisTabToggle(tab.id, tabChk.checked));
-
     tabRow.appendChild(labelSpan);
     tabRow.appendChild(tabChk);
     section.appendChild(tabRow);
@@ -2120,23 +2409,18 @@ function buildVisGrid() {
       const cardChecked = pendingVisibility.cards.includes(card.id);
       const cardRow = document.createElement('div');
       cardRow.className = 'vis-card-row';
-
       const cardLabel = document.createElement('div');
       cardLabel.className = 'vis-card-row-label';
       cardLabel.innerHTML = `${card.icon || '📋'} ${escHtml(card.title)}`;
-
       const cardChk = document.createElement('input');
       cardChk.type     = 'checkbox';
-      cardChk.id       = `visCard_${card.id}`;
       cardChk.checked  = cardChecked;
       cardChk.disabled = !tabChecked;
       cardChk.addEventListener('change', () => onVisCardToggle(card.id, cardChk.checked));
-
       cardRow.appendChild(cardLabel);
       cardRow.appendChild(cardChk);
       section.appendChild(cardRow);
     });
-
     grid.appendChild(section);
   });
 }
@@ -2144,12 +2428,12 @@ function buildVisGrid() {
 function onVisTabToggle(tabId, checked) {
   if (checked) {
     if (!pendingVisibility.tabs.includes(tabId)) pendingVisibility.tabs.push(tabId);
-    db.cards.filter(c => c.tabId === tabId).forEach(c => {
+    getCardsArray().filter(c => c.tabId === tabId).forEach(c => {
       if (!pendingVisibility.cards.includes(c.id)) pendingVisibility.cards.push(c.id);
     });
   } else {
     pendingVisibility.tabs = pendingVisibility.tabs.filter(id => id !== tabId);
-    db.cards.filter(c => c.tabId === tabId).forEach(c => {
+    getCardsArray().filter(c => c.tabId === tabId).forEach(c => {
       pendingVisibility.cards = pendingVisibility.cards.filter(id => id !== c.id);
     });
   }
@@ -2165,22 +2449,19 @@ function onVisCardToggle(cardId, checked) {
 }
 
 function saveVisibility() {
-  const user = db.users.find(u => u.id === visibilityUserId);
+  const user = db.users[visibilityUserId];
   if (!user) { closeModal('visibilityModal'); return; }
-
-  const allTabs  = db.tabs.every(t  => pendingVisibility.tabs.includes(t.id));
-  const allCards = db.cards.every(c => pendingVisibility.cards.includes(c.id));
+  const allTabs  = getTabsArray().every(t  => pendingVisibility.tabs.includes(t.id));
+  const allCards = getCardsArray().every(c => pendingVisibility.cards.includes(c.id));
   user.visibility = (allTabs && allCards) ? null : pendingVisibility;
-
-  saveData();
+  saveData(true);
   closeModal('visibilityModal');
-  renderPortal();
   showToast('Visibility saved.');
 }
 
 function openVisForCard(e, cardId) {
   e.stopPropagation();
-  showToast('Use "🔒 Visibility" per user in Manage Users to control card access.');
+  showToast('Use "🔒 Vis" per user in Manage Users to control card access.');
 }
 
 // ══════════════════════════════════════════════════════
@@ -2191,7 +2472,22 @@ function openSettingsModal() {
   document.getElementById('settingsSubtitle').value  = db.settings.subtitle  || '';
   document.getElementById('settingsAdminUnit').value = db.settings.adminUnit || '';
   document.getElementById('settingsLogoUrl').value   = db.settings.logoUrl   || '';
+
+  // Generate export code for cross-device setup
+  const cfg = getStoredFbConfig();
+  if (cfg) {
+    document.getElementById('exportConfigText').textContent = generateExportCode(cfg);
+  }
+
   document.getElementById('settingsModal').classList.add('open');
+}
+
+function copyExportConfig() {
+  const text = document.getElementById('exportConfigText').textContent;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => showToast('Config code copied!')).catch(() => {
+    showToast('Select and copy the code manually.');
+  });
 }
 
 function saveSettings() {
@@ -2200,16 +2496,15 @@ function saveSettings() {
   db.settings.adminUnit = document.getElementById('settingsAdminUnit').value.trim();
   db.settings.logoUrl   = document.getElementById('settingsLogoUrl').value.trim();
 
-  const adminUser = db.users.find(u => u.id === currentUser.id);
+  const adminUser = db.users[currentUser.id];
   if (adminUser && db.settings.adminUnit) {
     adminUser.unit = db.settings.adminUnit;
     currentUser.unit = db.settings.adminUnit;
   }
 
-  saveData();
+  saveData(true);
   closeModal('settingsModal');
-  renderPortal();
-  showToast('Settings saved.');
+  showToast('Settings saved & syncing to all devices…');
 }
 
 // ══════════════════════════════════════════════════════
@@ -2220,11 +2515,7 @@ function toggleDark() {
   localStorage.setItem(DARK_KEY, document.body.classList.contains('dark') ? '1' : '0');
 }
 
-(function() {
-  if (localStorage.getItem(DARK_KEY) === '1') {
-    document.body.classList.add('dark');
-  }
-})();
+if (localStorage.getItem(DARK_KEY) === '1') { document.body.classList.add('dark'); }
 
 // ══════════════════════════════════════════════════════
 //  OVERLAY CLOSE ON BACKDROP CLICK
@@ -2236,22 +2527,21 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 });
 
 // ══════════════════════════════════════════════════════
-//  INIT — Restore session or show login
+//  INIT
 // ══════════════════════════════════════════════════════
 (function init() {
-  applyLogo();
-  document.getElementById('loginPortalName').textContent     = db.settings.name     || "Clerk's Portal";
-  document.getElementById('loginPortalSubtitle').textContent = db.settings.subtitle || 'Ward & Branch Administration';
+  // Apply dark mode immediately
+  if (localStorage.getItem(DARK_KEY) === '1') document.body.classList.add('dark');
 
-  if (restoreSession()) {
-    hidePage('loginPage');
-    showPage('portalPage', false);
-    startIdleTracking();
-    renderPortal();
+  const cfg = getStoredFbConfig();
+  if (cfg && cfg.apiKey && cfg.databaseURL) {
+    initFirebase(cfg);
   } else {
-    showPage('loginPage', true);
+    hideLoadingScreen();
+    hidePage('loginPage');
     hidePage('portalPage');
     hidePage('forgotPage');
+    document.getElementById('firebaseSetupPage').style.display = 'flex';
   }
 })();
 </script>
