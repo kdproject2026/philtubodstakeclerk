@@ -71,12 +71,7 @@
       border: 1px solid rgba(201,168,76,0.3);
     }
 
-    .login-logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
+    .login-logo img { width: 100%; height: 100%; object-fit: contain; }
     .login-logo-fallback { font-size: 36px; }
 
     .login-box h2 {
@@ -204,10 +199,7 @@
       display: block;
     }
 
-    .topbar-logo-fallback {
-      font-size: 24px;
-      flex-shrink: 0;
-    }
+    .topbar-logo-fallback { font-size: 24px; flex-shrink: 0; }
 
     .topbar .brand {
       font-size: 15px;
@@ -218,10 +210,7 @@
       text-overflow: ellipsis;
     }
 
-    .topbar .brand span.branch-name {
-      color: #888;
-      font-weight: 500;
-    }
+    .topbar .brand span.branch-name { color: #888; font-weight: 500; }
 
     .topbar .user-area {
       display: flex;
@@ -230,11 +219,7 @@
       flex-shrink: 0;
     }
 
-    .topbar .user-area .username-label {
-      font-size: 12px;
-      color: #555;
-      white-space: nowrap;
-    }
+    .topbar .user-area .username-label { font-size: 12px; color: #555; white-space: nowrap; }
 
     .topbar .user-area .icon-btn {
       background: none;
@@ -250,12 +235,37 @@
 
     .topbar .user-area .icon-btn:hover { background: #f0f2f8; }
 
-    /* ─── HERO ─── */
-    .hero {
+    /* ─── IDLE WARNING BAR ─── */
+    #idleWarning {
+      display: none;
+      position: fixed;
+      top: 58px;
+      left: 0; right: 0;
+      background: #856404;
+      color: #fff9e6;
+      font-size: 13px;
+      font-weight: 600;
       text-align: center;
-      padding: 36px 20px 20px;
+      padding: 8px 16px;
+      z-index: 99;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+    #idleWarning.show { display: flex; }
+    #idleWarning button {
+      background: #fff9e6;
+      color: #856404;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
+    /* ─── HERO ─── */
+    .hero { text-align: center; padding: 36px 20px 20px; }
     .hero h1 { font-size: 26px; font-weight: 800; color: #1a1a2e; line-height: 1.2; }
     .hero p { font-size: 13px; color: #888; margin-top: 6px; }
 
@@ -296,12 +306,7 @@
     .tab-content { display: none; padding: 0 24px 60px; max-width: 1300px; margin: 0 auto; }
     .tab-content.active { display: block; }
 
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #1a1a2e;
-      margin-bottom: 14px;
-    }
+    .section-title { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; }
 
     /* ─── CARDS GRID ─── */
     .cards-grid {
@@ -311,9 +316,7 @@
       margin-bottom: 36px;
     }
 
-    .card-resizable-wrapper {
-      position: relative;
-    }
+    .card-resizable-wrapper { position: relative; }
 
     .card {
       background: #fff;
@@ -711,6 +714,7 @@
     body.dark .vis-card-row input[type="checkbox"] { accent-color: var(--gold); }
     body.dark .pw-reveal { background: var(--dark-border); color: var(--dark-muted); border-color: var(--dark-border); }
     body.dark .pw-reveal:hover { background: rgba(201,168,76,0.15); color: var(--gold); }
+    body.dark #idleWarning { background: #6b4f00; }
 
     /* ─── FORGOT / RESET PAGES ─── */
     #forgotPage {
@@ -779,9 +783,7 @@
     .forgot-success { color: #68d391; font-size: 13px; margin-top: 12px; }
     .forgot-error { color: #ff6b6b; font-size: 13px; margin-top: 10px; }
 
-    /* MRN step vs reset step */
     #forgotStep1, #forgotStep2 { width: 100%; }
-
     #forgotStep2 { display: none; }
 
     .mrn-info-box {
@@ -796,56 +798,6 @@
     }
 
     .mrn-info-box strong { color: var(--gold-light); }
-
-    #resetPage {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%);
-    }
-
-    .reset-box {
-      background: linear-gradient(160deg, #1a1a2e 0%, #16213e 100%);
-      border-radius: 20px;
-      padding: 44px 38px;
-      width: 400px;
-      max-width: 95vw;
-      box-shadow: 0 0 0 1px rgba(201,168,76,0.25), 0 24px 80px rgba(0,0,0,0.6);
-      text-align: center;
-    }
-
-    .reset-box h2 { font-size: 20px; font-weight: 800; color: var(--gold-light); margin-bottom: 6px; }
-    .reset-box p { font-size: 12px; color: var(--dark-muted); margin-bottom: 22px; }
-
-    .reset-box .password-wrapper input {
-      background: rgba(255,255,255,0.05);
-      border: 1.5px solid rgba(201,168,76,0.25);
-      border-radius: 10px;
-      font-size: 14px;
-      color: #e8d5a3;
-    }
-
-    .reset-box .password-wrapper input::placeholder { color: #6a5a3a; }
-    .reset-box .password-wrapper input:focus { border-color: var(--gold); }
-
-    .reset-box .btn-login {
-      width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
-      color: #0f0f1a;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity .2s;
-      margin-top: 14px;
-    }
-
-    .reset-box .btn-login:hover { opacity: .9; }
-    .reset-error { color: #ff6b6b; font-size: 12px; margin-top: 10px; }
-    .reset-success { color: #68d391; font-size: 13px; margin-top: 12px; }
 
     /* Hidden card badge */
     .card-hidden-badge {
@@ -946,7 +898,7 @@
       <div class="forgot-error" id="forgotError"></div>
     </div>
 
-    <!-- Step 2: Set New Password (shown after MRN verified) -->
+    <!-- Step 2: Set New Password -->
     <div id="forgotStep2">
       <h2>Reset Password</h2>
       <p class="forgot-desc">MRN verified. Enter your new password below.</p>
@@ -985,6 +937,12 @@
       <button class="icon-btn" title="Toggle Dark/Gold Mode" onclick="toggleDark()">🌙</button>
       <button class="icon-btn" title="Logout" onclick="doLogout()">⎋</button>
     </div>
+  </div>
+
+  <!-- Idle warning bar -->
+  <div id="idleWarning">
+    ⚠️ You've been idle for 55 minutes. You will be logged out in 5 minutes.
+    <button onclick="resetIdleTimer()">Stay Logged In</button>
   </div>
 
   <div class="hero">
@@ -1154,13 +1112,20 @@ const ICONS = [
 ];
 
 // ══════════════════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════════════════
+const DB_KEY      = 'clerksportal_v2';
+const SESSION_KEY = 'clerksportal_session';
+const DARK_KEY    = 'clerksportal_dark';
+const IDLE_LIMIT  = 60 * 60 * 1000;   // 1 hour in ms
+const WARN_BEFORE = 5  * 60 * 1000;   // warn 5 min before logout
+
+// ══════════════════════════════════════════════════════
 //  DATA STORE
 // ══════════════════════════════════════════════════════
 function loadData() {
-  const raw = localStorage.getItem('clerksportal_v2');
-  if (raw) {
-    try { return JSON.parse(raw); } catch(e) {}
-  }
+  const raw = localStorage.getItem(DB_KEY);
+  if (raw) { try { return JSON.parse(raw); } catch(e) {} }
   return {
     settings: {
       name: "Philippines Tubod Stake Portal",
@@ -1202,25 +1167,154 @@ function loadData() {
 }
 
 function saveData() {
-  localStorage.setItem('clerksportal_v2', JSON.stringify(db));
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+  // Broadcast to other tabs/windows in the same browser
+  try { bc.postMessage({ type: 'db_update' }); } catch(e) {}
 }
 
 let db = loadData();
-let currentUser      = null;
-let editingCardId    = null;
-let editingTabId     = null;
-let editingUserId    = null;
-let activeTabId      = null;
-let visibilityUserId = null;
-let pendingVisibility= null;
-// MRN-based reset state
+let currentUser       = null;
+let editingCardId     = null;
+let editingTabId      = null;
+let editingUserId     = null;
+let activeTabId       = null;
+let visibilityUserId  = null;
+let pendingVisibility = null;
 let forgotVerifiedUserId = null;
+
+// ══════════════════════════════════════════════════════
+//  BROADCAST CHANNEL (same-browser cross-tab sync)
+// ══════════════════════════════════════════════════════
+let bc;
+try {
+  bc = new BroadcastChannel('clerksportal_sync');
+  bc.onmessage = (e) => {
+    if (e.data && e.data.type === 'db_update') {
+      db = loadData();
+      if (currentUser) {
+        // Refresh current user object from updated db
+        const refreshed = db.users.find(u => u.id === currentUser.id);
+        if (refreshed) currentUser = refreshed;
+        renderPortal();
+      }
+    }
+    if (e.data && e.data.type === 'force_logout') {
+      performLogout();
+    }
+  };
+} catch(e) {
+  bc = { postMessage: () => {} };
+}
+
+// ══════════════════════════════════════════════════════
+//  CROSS-DEVICE SYNC via storage event
+//  (fires when another browser window/tab writes localStorage)
+// ══════════════════════════════════════════════════════
+window.addEventListener('storage', (e) => {
+  if (e.key === DB_KEY) {
+    db = loadData();
+    if (currentUser) {
+      const refreshed = db.users.find(u => u.id === currentUser.id);
+      if (refreshed) currentUser = refreshed;
+      renderPortal();
+    }
+  }
+});
+
+// ══════════════════════════════════════════════════════
+//  SESSION PERSISTENCE
+// ══════════════════════════════════════════════════════
+function saveSession(userId) {
+  const session = { userId, savedAt: Date.now() };
+  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+function restoreSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return false;
+    const session = JSON.parse(raw);
+    if (!session || !session.userId) return false;
+
+    // Check if session has been idle past the limit since last activity
+    const lastActivity = parseInt(localStorage.getItem('clerksportal_last_activity') || '0', 10);
+    const now = Date.now();
+    const reference = lastActivity || session.savedAt;
+    if (now - reference > IDLE_LIMIT) {
+      clearSession();
+      return false;
+    }
+
+    const user = db.users.find(u => u.id === session.userId);
+    if (!user) { clearSession(); return false; }
+
+    currentUser = user;
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  IDLE TIMER
+// ══════════════════════════════════════════════════════
+let idleTimer       = null;
+let warnTimer       = null;
+let idleWarningShown = false;
+
+function resetIdleTimer() {
+  localStorage.setItem('clerksportal_last_activity', Date.now().toString());
+  hideIdleWarning();
+  clearTimeout(idleTimer);
+  clearTimeout(warnTimer);
+  if (!currentUser) return;
+
+  // Show warning 5 min before logout
+  warnTimer = setTimeout(() => {
+    showIdleWarning();
+  }, IDLE_LIMIT - WARN_BEFORE);
+
+  // Auto logout at 1 hour
+  idleTimer = setTimeout(() => {
+    hideIdleWarning();
+    clearSession();
+    performLogout(true);
+  }, IDLE_LIMIT);
+}
+
+function showIdleWarning() {
+  idleWarningShown = true;
+  document.getElementById('idleWarning').classList.add('show');
+}
+
+function hideIdleWarning() {
+  idleWarningShown = false;
+  document.getElementById('idleWarning').classList.remove('show');
+}
+
+function startIdleTracking() {
+  const events = ['mousemove','mousedown','keydown','touchstart','scroll','click'];
+  events.forEach(ev => document.addEventListener(ev, resetIdleTimer, { passive: true }));
+  resetIdleTimer();
+}
+
+function stopIdleTracking() {
+  clearTimeout(idleTimer);
+  clearTimeout(warnTimer);
+  hideIdleWarning();
+}
 
 // ══════════════════════════════════════════════════════
 //  UTILITIES
 // ══════════════════════════════════════════════════════
 function escHtml(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function showToast(msg, duration = 3000) {
@@ -1266,7 +1360,7 @@ function applyLogo() {
 }
 
 // ══════════════════════════════════════════════════════
-//  PAGE SHOW/HIDE
+//  PAGE SHOW / HIDE
 // ══════════════════════════════════════════════════════
 function hidePage(id) { document.getElementById(id).style.display = 'none'; }
 function showPage(id, flex) {
@@ -1278,7 +1372,6 @@ function showLogin() {
   hidePage('portalPage');
   showPage('loginPage', true);
   document.getElementById('loginError').textContent = '';
-  // Reset forgot flow state
   forgotVerifiedUserId = null;
   resetForgotFlow();
 }
@@ -1291,15 +1384,14 @@ function showForgot() {
 }
 
 function resetForgotFlow() {
-  // Show step 1, hide step 2
   document.getElementById('forgotStep1').style.display = 'block';
   document.getElementById('forgotStep2').style.display = 'none';
   document.getElementById('forgotMrn').value = '';
   document.getElementById('forgotError').textContent = '';
-  if (document.getElementById('forgotNewPass1')) document.getElementById('forgotNewPass1').value = '';
-  if (document.getElementById('forgotNewPass2')) document.getElementById('forgotNewPass2').value = '';
-  if (document.getElementById('forgotResetError')) document.getElementById('forgotResetError').textContent = '';
-  if (document.getElementById('forgotResetSuccess')) document.getElementById('forgotResetSuccess').textContent = '';
+  document.getElementById('forgotNewPass1').value = '';
+  document.getElementById('forgotNewPass2').value = '';
+  document.getElementById('forgotResetError').textContent = '';
+  document.getElementById('forgotResetSuccess').textContent = '';
 }
 
 // ══════════════════════════════════════════════════════
@@ -1314,19 +1406,31 @@ function doLogin() {
     return;
   }
   currentUser = found;
+  saveSession(found.id);
   hidePage('loginPage');
   showPage('portalPage', false);
+  startIdleTracking();
   renderPortal();
 }
 
-function doLogout() {
+function performLogout(idleExpired = false) {
+  stopIdleTracking();
   currentUser = null;
+  clearSession();
   hidePage('portalPage');
   showPage('loginPage', true);
   document.getElementById('loginUser').value = '';
   document.getElementById('loginPass').value = '';
   document.getElementById('loginError').textContent = '';
   activeTabId = null;
+  if (idleExpired) {
+    showToast('You were logged out due to inactivity.', 4000);
+  }
+}
+
+function doLogout() {
+  try { bc.postMessage({ type: 'force_logout' }); } catch(e) {}
+  performLogout(false);
 }
 
 document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
@@ -1336,16 +1440,12 @@ document.getElementById('loginUser').addEventListener('keydown', e => { if (e.ke
 //  AUTH — FORGOT PASSWORD via MRN
 // ══════════════════════════════════════════════════════
 function doVerifyMrn() {
-  const mrn = document.getElementById('forgotMrn').value.trim();
+  const mrn   = document.getElementById('forgotMrn').value.trim();
   const errEl = document.getElementById('forgotError');
   errEl.textContent = '';
 
-  if (!mrn) {
-    errEl.textContent = 'Please enter your Member Record Number (MRN).';
-    return;
-  }
+  if (!mrn) { errEl.textContent = 'Please enter your Member Record Number (MRN).'; return; }
 
-  // Find user by MRN (case-insensitive, ignore dashes/spaces for flexibility)
   const normalize = s => s.replace(/[-\s]/g, '').toLowerCase();
   const user = db.users.find(u => u.mrn && normalize(u.mrn) === normalize(mrn));
 
@@ -1354,11 +1454,8 @@ function doVerifyMrn() {
     return;
   }
 
-  // MRN matched — proceed to step 2
   forgotVerifiedUserId = user.id;
-  const displayName = user.fullName || user.username;
-  document.getElementById('forgotVerifiedName').textContent = displayName;
-
+  document.getElementById('forgotVerifiedName').textContent = user.fullName || user.username;
   document.getElementById('forgotStep1').style.display = 'none';
   document.getElementById('forgotStep2').style.display = 'block';
   document.getElementById('forgotNewPass1').value = '';
@@ -1368,44 +1465,31 @@ function doVerifyMrn() {
 }
 
 function doResetFromMrn() {
-  const p1 = document.getElementById('forgotNewPass1').value;
-  const p2 = document.getElementById('forgotNewPass2').value;
+  const p1    = document.getElementById('forgotNewPass1').value;
+  const p2    = document.getElementById('forgotNewPass2').value;
   const errEl = document.getElementById('forgotResetError');
   const okEl  = document.getElementById('forgotResetSuccess');
   errEl.textContent = '';
   okEl.textContent  = '';
 
-  if (!p1 || p1.length < 6) {
-    errEl.textContent = 'Password must be at least 6 characters.';
-    return;
-  }
-  if (p1 !== p2) {
-    errEl.textContent = 'Passwords do not match.';
-    return;
-  }
+  if (!p1 || p1.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+  if (p1 !== p2)             { errEl.textContent = 'Passwords do not match.'; return; }
   if (!forgotVerifiedUserId) {
     errEl.textContent = 'Session expired. Please start over.';
     resetForgotFlow();
-    document.getElementById('forgotStep1').style.display = 'block';
-    document.getElementById('forgotStep2').style.display = 'none';
     return;
   }
 
   const user = db.users.find(u => u.id === forgotVerifiedUserId);
-  if (!user) {
-    errEl.textContent = 'User not found.';
-    return;
-  }
+  if (!user) { errEl.textContent = 'User not found.'; return; }
 
   user.password = p1;
   saveData();
   forgotVerifiedUserId = null;
-
   okEl.textContent = '✅ Password updated successfully! Redirecting to login...';
   setTimeout(() => showLogin(), 2200);
 }
 
-// Allow Enter key on MRN field
 document.getElementById('forgotMrn').addEventListener('keydown', e => {
   if (e.key === 'Enter') doVerifyMrn();
 });
@@ -1416,15 +1500,9 @@ document.getElementById('forgotMrn').addEventListener('keydown', e => {
 function renderPortal() {
   applyLogo();
 
-  const isAdmin = currentUser.role === 'admin';
+  const isAdmin    = currentUser.role === 'admin';
   const portalName = db.settings.name || "Clerk's Portal";
-
-  let unitName = '';
-  if (isAdmin) {
-    unitName = db.settings.adminUnit || '';
-  } else {
-    unitName = currentUser.unit || '';
-  }
+  const unitName   = isAdmin ? (db.settings.adminUnit || '') : (currentUser.unit || '');
 
   const brandEl = document.getElementById('portalBrandFull');
   if (unitName) {
@@ -1433,12 +1511,11 @@ function renderPortal() {
     brandEl.textContent = portalName;
   }
 
-  document.getElementById('topbarUsername').textContent = currentUser.username;
-  document.getElementById('heroTitle').textContent = portalName;
-  document.getElementById('heroSubtitle').textContent = db.settings.subtitle || '';
-
-  document.getElementById('loginPortalName').textContent    = portalName;
-  document.getElementById('loginPortalSubtitle').textContent = db.settings.subtitle || '';
+  document.getElementById('topbarUsername').textContent       = currentUser.username;
+  document.getElementById('heroTitle').textContent            = portalName;
+  document.getElementById('heroSubtitle').textContent         = db.settings.subtitle || '';
+  document.getElementById('loginPortalName').textContent      = portalName;
+  document.getElementById('loginPortalSubtitle').textContent  = db.settings.subtitle || '';
 
   if (!activeTabId || (!db.tabs.find(t => t.id === activeTabId) && activeTabId !== 'admin')) {
     activeTabId = db.tabs[0]?.id || null;
@@ -1456,7 +1533,6 @@ function renderTabs() {
 
   db.tabs.forEach(tab => {
     if (!isAdmin && !canSeeTab(currentUser, tab.id)) return;
-
     const btn = document.createElement('button');
     btn.className = 'tab-btn' + (tab.id === activeTabId ? ' active' : '');
     btn.textContent = tab.name;
@@ -1537,31 +1613,27 @@ function renderTabContent() {
       <p>${escHtml(card.desc || '')}</p>
       ${isAdmin ? `
         <div class="admin-actions">
-          <button class="btn-edit" onclick="openEditCard(event,${card.id})">✏️</button>
-          <button class="btn-hide" onclick="openVisForCard(event,${card.id})">👁</button>
+          <button class="btn-edit"   onclick="openEditCard(event,${card.id})">✏️</button>
+          <button class="btn-hide"   onclick="openVisForCard(event,${card.id})">👁</button>
           <button class="btn-delete" onclick="deleteCard(event,${card.id})">🗑</button>
         </div>` : ''}
     `;
 
-    if (card.link) {
-      c.onclick = () => window.open(card.link, '_blank');
-    }
+    if (card.link) { c.onclick = () => window.open(card.link, '_blank'); }
 
     if (isAdmin) {
       const rh = document.createElement('div');
       rh.className = 'resize-handle';
       rh.title = 'Drag to resize (1–3 columns)';
       let startX, startSpan;
+
       rh.addEventListener('mousedown', ev => {
-        ev.preventDefault();
-        ev.stopPropagation();
-        startX    = ev.clientX;
-        startSpan = card.colSpan || 1;
+        ev.preventDefault(); ev.stopPropagation();
+        startX = ev.clientX; startSpan = card.colSpan || 1;
         const onMove = em => {
           const delta = Math.round((em.clientX - startX) / 80);
-          const newSpan = Math.max(1, Math.min(3, startSpan + delta));
-          card.colSpan = newSpan;
-          wrapper.style.gridColumn = newSpan > 1 ? `span ${newSpan}` : '';
+          card.colSpan = Math.max(1, Math.min(3, startSpan + delta));
+          wrapper.style.gridColumn = card.colSpan > 1 ? `span ${card.colSpan}` : '';
         };
         const onUp = () => {
           saveData();
@@ -1571,10 +1643,10 @@ function renderTabContent() {
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', onUp);
       });
+
       rh.addEventListener('touchstart', ev => {
         ev.preventDefault();
-        startX    = ev.touches[0].clientX;
-        startSpan = card.colSpan || 1;
+        startX = ev.touches[0].clientX; startSpan = card.colSpan || 1;
         const onMove = em => {
           const delta = Math.round((em.touches[0].clientX - startX) / 80);
           card.colSpan = Math.max(1, Math.min(3, startSpan + delta));
@@ -1690,7 +1762,7 @@ function renderAdminTab(tc) {
       <td>${escHtml(tab.name)}</td>
       <td>${count}</td>
       <td>
-        <button class="btn-sm btn-sm-edit" onclick="openEditTab(${tab.id})">✏️ Edit</button>
+        <button class="btn-sm btn-sm-edit"   onclick="openEditTab(${tab.id})">✏️ Edit</button>
         &nbsp;
         <button class="btn-sm btn-sm-danger" onclick="deleteTab(${tab.id})">🗑 Delete</button>
       </td>
@@ -1871,7 +1943,7 @@ function saveTab() {
 function deleteTab(tabId) {
   if (db.tabs.length <= 1) { showToast('Cannot delete the last tab.'); return; }
   if (!confirm('Delete this tab and all its cards?')) return;
-  db.tabs  = db.tabs.filter(t => t.id !== tabId);
+  db.tabs = db.tabs.filter(t => t.id !== tabId);
   const removedCards = db.cards.filter(c => c.tabId === tabId).map(c => c.id);
   db.cards = db.cards.filter(c => c.tabId !== tabId);
   db.users.forEach(u => {
@@ -1905,15 +1977,15 @@ function openEditUser(userId) {
   if (!user) return;
   editingUserId = userId;
   document.getElementById('userModalTitle').textContent = 'Edit User';
-  document.getElementById('newUsername').value  = user.username  || '';
-  document.getElementById('newPassword').value  = user.password  || '';
-  document.getElementById('newFullName').value  = user.fullName  || '';
-  document.getElementById('newEmail').value     = user.email     || '';
-  document.getElementById('newPhone').value     = user.phone     || '';
-  document.getElementById('newMrn').value       = user.mrn       || '';
-  document.getElementById('newCalling').value   = user.calling   || '';
-  document.getElementById('newUnit').value      = user.unit      || '';
-  document.getElementById('newRole').value      = user.role      || 'user';
+  document.getElementById('newUsername').value = user.username  || '';
+  document.getElementById('newPassword').value = user.password  || '';
+  document.getElementById('newFullName').value = user.fullName  || '';
+  document.getElementById('newEmail').value    = user.email     || '';
+  document.getElementById('newPhone').value    = user.phone     || '';
+  document.getElementById('newMrn').value      = user.mrn       || '';
+  document.getElementById('newCalling').value  = user.calling   || '';
+  document.getElementById('newUnit').value     = user.unit      || '';
+  document.getElementById('newRole').value     = user.role      || 'user';
   document.getElementById('userModal').classList.add('open');
 }
 
@@ -1928,8 +2000,8 @@ function saveUser() {
   const unit     = document.getElementById('newUnit').value.trim();
   const role     = document.getElementById('newRole').value;
 
-  if (!username)               { showToast('Username is required.');  return; }
-  if (!editingUserId && !password) { showToast('Password is required.'); return; }
+  if (!username)                    { showToast('Username is required.');  return; }
+  if (!editingUserId && !password)  { showToast('Password is required.'); return; }
 
   if (editingUserId) {
     const dup = db.users.find(u => u.username === username && u.id !== editingUserId);
@@ -1939,6 +2011,11 @@ function saveUser() {
       username, fullName, email, phone, mrn, calling, unit, role,
       password: password || user.password
     });
+    // If the current logged-in user was edited, update currentUser reference
+    if (currentUser && currentUser.id === editingUserId) {
+      currentUser = user;
+      saveSession(user.id);
+    }
   } else {
     if (db.users.find(u => u.username === username)) { showToast('Username already exists.'); return; }
     db.users.push({ id: Date.now(), username, password, role, fullName, email, phone, mrn, calling, unit, visibility: null });
@@ -1994,7 +2071,6 @@ function openVisibilityModal(userId) {
   const user = db.users.find(u => u.id === userId);
   if (!user) return;
   visibilityUserId = userId;
-
   document.getElementById('visModalTitle').textContent =
     `Visibility — ${user.fullName || user.username}`;
 
@@ -2022,7 +2098,6 @@ function buildVisGrid() {
     const section = document.createElement('div');
     section.className = 'vis-tab-section';
 
-    // ── Tab header row: label LEFT, checkbox RIGHT ──
     const tabRow = document.createElement('div');
     tabRow.className = 'vis-tab-header';
 
@@ -2032,8 +2107,8 @@ function buildVisGrid() {
       <span style="font-size:11px;font-weight:400;color:#888;">(${tabCards.length} card${tabCards.length !== 1 ? 's' : ''})</span>`;
 
     const tabChk = document.createElement('input');
-    tabChk.type = 'checkbox';
-    tabChk.id   = `visTab_${tab.id}`;
+    tabChk.type    = 'checkbox';
+    tabChk.id      = `visTab_${tab.id}`;
     tabChk.checked = tabChecked;
     tabChk.addEventListener('change', () => onVisTabToggle(tab.id, tabChk.checked));
 
@@ -2041,10 +2116,8 @@ function buildVisGrid() {
     tabRow.appendChild(tabChk);
     section.appendChild(tabRow);
 
-    // ── Card rows: label LEFT, checkbox RIGHT ──
     tabCards.forEach(card => {
       const cardChecked = pendingVisibility.cards.includes(card.id);
-
       const cardRow = document.createElement('div');
       cardRow.className = 'vis-card-row';
 
@@ -2053,8 +2126,8 @@ function buildVisGrid() {
       cardLabel.innerHTML = `${card.icon || '📋'} ${escHtml(card.title)}`;
 
       const cardChk = document.createElement('input');
-      cardChk.type = 'checkbox';
-      cardChk.id   = `visCard_${card.id}`;
+      cardChk.type     = 'checkbox';
+      cardChk.id       = `visCard_${card.id}`;
       cardChk.checked  = cardChecked;
       cardChk.disabled = !tabChecked;
       cardChk.addEventListener('change', () => onVisCardToggle(card.id, cardChk.checked));
@@ -2122,7 +2195,7 @@ function openSettingsModal() {
 }
 
 function saveSettings() {
-  db.settings.name      = document.getElementById('settingsName').value.trim()      || "Clerk's Portal";
+  db.settings.name      = document.getElementById('settingsName').value.trim()     || "Clerk's Portal";
   db.settings.subtitle  = document.getElementById('settingsSubtitle').value.trim();
   db.settings.adminUnit = document.getElementById('settingsAdminUnit').value.trim();
   db.settings.logoUrl   = document.getElementById('settingsLogoUrl').value.trim();
@@ -2144,11 +2217,11 @@ function saveSettings() {
 // ══════════════════════════════════════════════════════
 function toggleDark() {
   document.body.classList.toggle('dark');
-  localStorage.setItem('clerksportal_dark', document.body.classList.contains('dark') ? '1' : '0');
+  localStorage.setItem(DARK_KEY, document.body.classList.contains('dark') ? '1' : '0');
 }
 
 (function() {
-  if (localStorage.getItem('clerksportal_dark') === '1') {
+  if (localStorage.getItem(DARK_KEY) === '1') {
     document.body.classList.add('dark');
   }
 })();
@@ -2163,11 +2236,24 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 });
 
 // ══════════════════════════════════════════════════════
-//  INIT
+//  INIT — Restore session or show login
 // ══════════════════════════════════════════════════════
-applyLogo();
-document.getElementById('loginPortalName').textContent     = db.settings.name     || "Clerk's Portal";
-document.getElementById('loginPortalSubtitle').textContent = db.settings.subtitle || 'Ward & Branch Administration';
+(function init() {
+  applyLogo();
+  document.getElementById('loginPortalName').textContent     = db.settings.name     || "Clerk's Portal";
+  document.getElementById('loginPortalSubtitle').textContent = db.settings.subtitle || 'Ward & Branch Administration';
+
+  if (restoreSession()) {
+    hidePage('loginPage');
+    showPage('portalPage', false);
+    startIdleTracking();
+    renderPortal();
+  } else {
+    showPage('loginPage', true);
+    hidePage('portalPage');
+    hidePage('forgotPage');
+  }
+})();
 </script>
 </body>
 </html>
