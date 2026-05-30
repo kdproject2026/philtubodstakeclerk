@@ -588,34 +588,69 @@
     .btn-sm-view { background: #e8f5e9; color: #388e3c; }
     .btn-sm-vis { background: #fff3cd; color: #856404; }
 
-    /* Visibility modal */
-    .user-visibility-grid { max-height: 320px; overflow-y: auto; }
+    /* ─── VISIBILITY MODAL ─── */
+    .user-visibility-grid { max-height: 360px; overflow-y: auto; }
 
-    .vis-tab-section { margin-bottom: 14px; }
+    .vis-tab-section { margin-bottom: 10px; }
 
     .vis-tab-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
+      justify-content: space-between;
+      padding: 8px 12px;
       background: #f0f2f8;
       border-radius: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+    }
+
+    .vis-tab-header-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .vis-tab-header input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #4a4aff;
+      flex-shrink: 0;
     }
 
     .vis-card-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 5px 10px 5px 24px;
-      font-size: 12px;
+      justify-content: space-between;
+      padding: 6px 12px 6px 28px;
       border-radius: 6px;
       transition: background .15s;
     }
 
     .vis-card-row:hover { background: #f5f5ff; }
+
+    .vis-card-row-label {
+      font-size: 12px;
+      color: #444;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vis-card-row input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      accent-color: #4a4aff;
+      flex-shrink: 0;
+    }
+
+    .vis-card-row input[type="checkbox"]:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
 
     /* Password display in admin */
     .pw-reveal {
@@ -668,9 +703,12 @@
     body.dark .users-table td { border-color: var(--dark-border); }
     body.dark .users-table tr:hover td { background: rgba(255,255,255,0.03); }
     body.dark .section-title { color: var(--dark-text); }
-    body.dark .vis-tab-header { background: var(--dark-border); color: var(--dark-text); }
+    body.dark .vis-tab-header { background: var(--dark-border); }
+    body.dark .vis-tab-header-label { color: var(--dark-text); }
     body.dark .vis-card-row:hover { background: rgba(201,168,76,0.07); }
-    body.dark .vis-card-row { color: var(--dark-muted); }
+    body.dark .vis-card-row-label { color: var(--dark-muted); }
+    body.dark .vis-tab-header input[type="checkbox"] { accent-color: var(--gold); }
+    body.dark .vis-card-row input[type="checkbox"] { accent-color: var(--gold); }
     body.dark .pw-reveal { background: var(--dark-border); color: var(--dark-muted); border-color: var(--dark-border); }
     body.dark .pw-reveal:hover { background: rgba(201,168,76,0.15); color: var(--gold); }
 
@@ -696,7 +734,7 @@
       background: linear-gradient(160deg, #1a1a2e 0%, #16213e 100%);
       border-radius: 20px;
       padding: 44px 38px;
-      width: 400px;
+      width: 420px;
       max-width: 95vw;
       box-shadow: 0 0 0 1px rgba(201,168,76,0.25), 0 24px 80px rgba(0,0,0,0.6);
       text-align: center;
@@ -705,7 +743,7 @@
     }
 
     .forgot-box h2 { font-size: 20px; font-weight: 800; color: var(--gold-light); margin-bottom: 6px; }
-    .forgot-box p { font-size: 12px; color: var(--dark-muted); margin-bottom: 22px; }
+    .forgot-box .forgot-desc { font-size: 12px; color: var(--dark-muted); margin-bottom: 22px; line-height: 1.6; }
 
     .forgot-box input {
       width: 100%;
@@ -718,10 +756,11 @@
       outline: none;
       color: #e8d5a3;
       transition: border-color .2s;
+      text-align: left;
     }
 
     .forgot-box input::placeholder { color: #6a5a3a; }
-    .forgot-box input:focus { border-color: var(--gold); }
+    .forgot-box input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
 
     .forgot-box .btn-login {
       width: 100%;
@@ -739,6 +778,24 @@
     .forgot-box .btn-login:hover { opacity: .9; }
     .forgot-success { color: #68d391; font-size: 13px; margin-top: 12px; }
     .forgot-error { color: #ff6b6b; font-size: 13px; margin-top: 10px; }
+
+    /* MRN step vs reset step */
+    #forgotStep1, #forgotStep2 { width: 100%; }
+
+    #forgotStep2 { display: none; }
+
+    .mrn-info-box {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: var(--dark-text);
+      text-align: left;
+    }
+
+    .mrn-info-box strong { color: var(--gold-light); }
 
     #resetPage {
       display: none;
@@ -845,6 +902,7 @@
     @media (max-width: 480px) {
       .cards-grid { grid-template-columns: repeat(2, 1fr); }
       .login-box { padding: 32px 20px; }
+      .forgot-box { padding: 32px 20px; }
     }
   </style>
 </head>
@@ -875,33 +933,41 @@
 <!-- ══════════════ FORGOT PAGE ══════════════ -->
 <div id="forgotPage">
   <div class="forgot-box">
-    <h2>Reset Password</h2>
-    <p>Enter your registered email address. We'll send a reset link.</p>
-    <input type="email" id="forgotEmail" placeholder="your@email.com" />
-    <button class="btn-login" onclick="doForgot()">Send Reset Link</button>
-    <div class="forgot-error" id="forgotError"></div>
-    <div class="forgot-success" id="forgotSuccess"></div>
+
+    <!-- Step 1: MRN Verification -->
+    <div id="forgotStep1">
+      <h2>Forgot Password</h2>
+      <p class="forgot-desc">
+        Enter your <strong>Member Record Number (MRN)</strong> to verify your identity.<br>
+        Contact your ward clerk if you don't know your MRN.
+      </p>
+      <input type="text" id="forgotMrn" placeholder="000-0000-0000" autocomplete="off" />
+      <button class="btn-login" onclick="doVerifyMrn()">Verify MRN</button>
+      <div class="forgot-error" id="forgotError"></div>
+    </div>
+
+    <!-- Step 2: Set New Password (shown after MRN verified) -->
+    <div id="forgotStep2">
+      <h2>Reset Password</h2>
+      <p class="forgot-desc">MRN verified. Enter your new password below.</p>
+      <div class="mrn-info-box">
+        Resetting password for: <strong id="forgotVerifiedName"></strong>
+      </div>
+      <div class="password-wrapper" style="margin-bottom:12px;">
+        <input type="password" id="forgotNewPass1" placeholder="New password" />
+        <button class="toggle-pw" type="button" onclick="togglePw('forgotNewPass1',this)">👁</button>
+      </div>
+      <div class="password-wrapper" style="margin-bottom:14px;">
+        <input type="password" id="forgotNewPass2" placeholder="Confirm new password" />
+        <button class="toggle-pw" type="button" onclick="togglePw('forgotNewPass2',this)">👁</button>
+      </div>
+      <button class="btn-login" onclick="doResetFromMrn()">Set New Password</button>
+      <div class="forgot-error" id="forgotResetError"></div>
+      <div class="forgot-success" id="forgotResetSuccess"></div>
+    </div>
+
     <br>
     <a class="forgot-link" onclick="showLogin()">← Back to Login</a>
-  </div>
-</div>
-
-<!-- ══════════════ RESET PAGE ══════════════ -->
-<div id="resetPage">
-  <div class="reset-box">
-    <h2>Set New Password</h2>
-    <p>Enter your new password below.</p>
-    <div class="password-wrapper">
-      <input type="password" id="resetPass1" placeholder="New password" />
-      <button class="toggle-pw" type="button" onclick="togglePw('resetPass1',this)">👁</button>
-    </div>
-    <div class="password-wrapper" style="margin-top:10px;">
-      <input type="password" id="resetPass2" placeholder="Confirm new password" />
-      <button class="toggle-pw" type="button" onclick="togglePw('resetPass2',this)">👁</button>
-    </div>
-    <button class="btn-login" onclick="doReset()">Set New Password</button>
-    <div class="reset-error" id="resetError"></div>
-    <div class="reset-success" id="resetSuccess"></div>
   </div>
 </div>
 
@@ -1039,7 +1105,7 @@
   <div class="modal" style="width:560px;">
     <h3 id="visModalTitle">Manage Visibility</h3>
     <p style="font-size:12px;color:#888;margin-bottom:14px;">
-      Control which tabs and cards this user can see.
+      Toggle which tabs and cards this user can see. Uncheck a tab to hide it and all its cards.
     </p>
     <div class="user-visibility-grid" id="visibilityGrid"></div>
     <div class="modal-actions">
@@ -1073,7 +1139,7 @@
 
 <script>
 // ══════════════════════════════════════════════════════
-//  ICONS — full expanded set
+//  ICONS
 // ══════════════════════════════════════════════════════
 const ICONS = [
   '📋','📁','📊','📝','👥','📞','🏠','📅','💰','🔑',
@@ -1106,13 +1172,13 @@ function loadData() {
       {
         id: 1, username: 'admin', password: 'admin123', role: 'admin',
         fullName: 'Administrator', email: 'admin@example.com',
-        phone: '', mrn: '', calling: 'Stake Clerk', unit: 'Tubod Stake',
+        phone: '', mrn: '000-0000-0001', calling: 'Stake Clerk', unit: 'Tubod Stake',
         visibility: null
       },
       {
         id: 2, username: 'clerk', password: 'clerk123', role: 'user',
         fullName: 'Ward Clerk', email: 'clerk@example.com',
-        phone: '', mrn: '', calling: 'Ward Clerk', unit: 'Alegria Ward',
+        phone: '', mrn: '000-0000-0002', calling: 'Ward Clerk', unit: 'Alegria Ward',
         visibility: null
       }
     ],
@@ -1131,8 +1197,7 @@ function loadData() {
       { id: 6, tabId: 3, title: 'Handbook',         desc: 'General Handbook of Instructions',
         link: '[churchofjesuschrist.org](https://www.churchofjesuschrist.org/study/manual/general-handbook)', icon: '📖', colSpan: 1 },
       { id: 7, tabId: 3, title: 'Directories',      desc: 'Ward directory and contact info',           link: '', icon: '📁', colSpan: 1 }
-    ],
-    pendingResets: []
+    ]
   };
 }
 
@@ -1141,14 +1206,15 @@ function saveData() {
 }
 
 let db = loadData();
-let currentUser   = null;
-let editingCardId = null;
-let editingTabId  = null;
-let editingUserId = null;
-let activeTabId   = null;
-let visibilityUserId  = null;
-let pendingVisibility = null;
-let resetToken    = null;
+let currentUser      = null;
+let editingCardId    = null;
+let editingTabId     = null;
+let editingUserId    = null;
+let activeTabId      = null;
+let visibilityUserId = null;
+let pendingVisibility= null;
+// MRN-based reset state
+let forgotVerifiedUserId = null;
 
 // ══════════════════════════════════════════════════════
 //  UTILITIES
@@ -1208,17 +1274,32 @@ function showPage(id, flex) {
 }
 
 function showLogin() {
-  hidePage('forgotPage'); hidePage('resetPage'); hidePage('portalPage');
+  hidePage('forgotPage');
+  hidePage('portalPage');
   showPage('loginPage', true);
   document.getElementById('loginError').textContent = '';
+  // Reset forgot flow state
+  forgotVerifiedUserId = null;
+  resetForgotFlow();
 }
 
 function showForgot() {
   hidePage('loginPage');
+  forgotVerifiedUserId = null;
+  resetForgotFlow();
   showPage('forgotPage', true);
-  document.getElementById('forgotError').textContent   = '';
-  document.getElementById('forgotSuccess').textContent = '';
-  document.getElementById('forgotEmail').value = '';
+}
+
+function resetForgotFlow() {
+  // Show step 1, hide step 2
+  document.getElementById('forgotStep1').style.display = 'block';
+  document.getElementById('forgotStep2').style.display = 'none';
+  document.getElementById('forgotMrn').value = '';
+  document.getElementById('forgotError').textContent = '';
+  if (document.getElementById('forgotNewPass1')) document.getElementById('forgotNewPass1').value = '';
+  if (document.getElementById('forgotNewPass2')) document.getElementById('forgotNewPass2').value = '';
+  if (document.getElementById('forgotResetError')) document.getElementById('forgotResetError').textContent = '';
+  if (document.getElementById('forgotResetSuccess')) document.getElementById('forgotResetSuccess').textContent = '';
 }
 
 // ══════════════════════════════════════════════════════
@@ -1252,76 +1333,82 @@ document.getElementById('loginPass').addEventListener('keydown', e => { if (e.ke
 document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 // ══════════════════════════════════════════════════════
-//  AUTH — FORGOT PASSWORD
-//  (Simulated: no real email; shows a fake reset link
-//   and stores a token so the reset page can be tested
-//   within the same browser session.)
+//  AUTH — FORGOT PASSWORD via MRN
 // ══════════════════════════════════════════════════════
-function doForgot() {
-  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+function doVerifyMrn() {
+  const mrn = document.getElementById('forgotMrn').value.trim();
   const errEl = document.getElementById('forgotError');
-  const okEl  = document.getElementById('forgotSuccess');
   errEl.textContent = '';
-  okEl.textContent  = '';
 
-  if (!email) { errEl.textContent = 'Please enter your email address.'; return; }
-
-  const user = db.users.find(u => (u.email || '').toLowerCase() === email);
-  if (!user) {
-    errEl.textContent = 'No account found with that email address.';
+  if (!mrn) {
+    errEl.textContent = 'Please enter your Member Record Number (MRN).';
     return;
   }
 
-  // Generate token and store pending reset
-  const token = 'reset_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-  db.pendingResets = db.pendingResets || [];
-  // Remove old tokens for this user
-  db.pendingResets = db.pendingResets.filter(r => r.userId !== user.id);
-  db.pendingResets.push({ token, userId: user.id, created: Date.now() });
-  saveData();
+  // Find user by MRN (case-insensitive, ignore dashes/spaces for flexibility)
+  const normalize = s => s.replace(/[-\s]/g, '').toLowerCase();
+  const user = db.users.find(u => u.mrn && normalize(u.mrn) === normalize(mrn));
 
-  // In a real app you'd send email; here we simulate by showing the "link"
-  okEl.innerHTML = `Reset link created! In a live deployment this would be emailed.<br><br>
-    <a class="forgot-link" style="word-break:break-all;" onclick="openResetToken('${token}')">
-      Click here to reset password (simulation)
-    </a>`;
+  if (!user) {
+    errEl.textContent = 'No account found with that MRN. Please check the number and try again.';
+    return;
+  }
+
+  // MRN matched — proceed to step 2
+  forgotVerifiedUserId = user.id;
+  const displayName = user.fullName || user.username;
+  document.getElementById('forgotVerifiedName').textContent = displayName;
+
+  document.getElementById('forgotStep1').style.display = 'none';
+  document.getElementById('forgotStep2').style.display = 'block';
+  document.getElementById('forgotNewPass1').value = '';
+  document.getElementById('forgotNewPass2').value = '';
+  document.getElementById('forgotResetError').textContent = '';
+  document.getElementById('forgotResetSuccess').textContent = '';
 }
 
-function openResetToken(token) {
-  resetToken = token;
-  hidePage('forgotPage');
-  document.getElementById('resetPass1').value = '';
-  document.getElementById('resetPass2').value = '';
-  document.getElementById('resetError').textContent   = '';
-  document.getElementById('resetSuccess').textContent = '';
-  showPage('resetPage', true);
-}
-
-function doReset() {
-  const p1 = document.getElementById('resetPass1').value;
-  const p2 = document.getElementById('resetPass2').value;
-  const errEl = document.getElementById('resetError');
-  const okEl  = document.getElementById('resetSuccess');
+function doResetFromMrn() {
+  const p1 = document.getElementById('forgotNewPass1').value;
+  const p2 = document.getElementById('forgotNewPass2').value;
+  const errEl = document.getElementById('forgotResetError');
+  const okEl  = document.getElementById('forgotResetSuccess');
   errEl.textContent = '';
   okEl.textContent  = '';
 
-  if (!p1 || p1.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
-  if (p1 !== p2)             { errEl.textContent = 'Passwords do not match.';                 return; }
+  if (!p1 || p1.length < 6) {
+    errEl.textContent = 'Password must be at least 6 characters.';
+    return;
+  }
+  if (p1 !== p2) {
+    errEl.textContent = 'Passwords do not match.';
+    return;
+  }
+  if (!forgotVerifiedUserId) {
+    errEl.textContent = 'Session expired. Please start over.';
+    resetForgotFlow();
+    document.getElementById('forgotStep1').style.display = 'block';
+    document.getElementById('forgotStep2').style.display = 'none';
+    return;
+  }
 
-  const entry = (db.pendingResets || []).find(r => r.token === resetToken);
-  if (!entry) { errEl.textContent = 'Invalid or expired reset link.'; return; }
-
-  const user = db.users.find(u => u.id === entry.userId);
-  if (!user) { errEl.textContent = 'User not found.'; return; }
+  const user = db.users.find(u => u.id === forgotVerifiedUserId);
+  if (!user) {
+    errEl.textContent = 'User not found.';
+    return;
+  }
 
   user.password = p1;
-  db.pendingResets = db.pendingResets.filter(r => r.token !== resetToken);
   saveData();
-  resetToken = null;
+  forgotVerifiedUserId = null;
 
-  okEl.textContent = 'Password updated! Redirecting to login...';
-  setTimeout(() => showLogin(), 2000);
+  okEl.textContent = '✅ Password updated successfully! Redirecting to login...';
+  setTimeout(() => showLogin(), 2200);
 }
+
+// Allow Enter key on MRN field
+document.getElementById('forgotMrn').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doVerifyMrn();
+});
 
 // ══════════════════════════════════════════════════════
 //  PORTAL RENDER
@@ -1332,7 +1419,6 @@ function renderPortal() {
   const isAdmin = currentUser.role === 'admin';
   const portalName = db.settings.name || "Clerk's Portal";
 
-  // Determine unit name to show in header
   let unitName = '';
   if (isAdmin) {
     unitName = db.settings.adminUnit || '';
@@ -1340,7 +1426,6 @@ function renderPortal() {
     unitName = currentUser.unit || '';
   }
 
-  // Topbar brand: "Philippines Tubod Stake Portal: Unit Name"
   const brandEl = document.getElementById('portalBrandFull');
   if (unitName) {
     brandEl.innerHTML = `${escHtml(portalName)}: <span class="branch-name">${escHtml(unitName)}</span>`;
@@ -1352,7 +1437,6 @@ function renderPortal() {
   document.getElementById('heroTitle').textContent = portalName;
   document.getElementById('heroSubtitle').textContent = db.settings.subtitle || '';
 
-  // Login page branding (kept fresh for next logout)
   document.getElementById('loginPortalName').textContent    = portalName;
   document.getElementById('loginPortalSubtitle').textContent = db.settings.subtitle || '';
 
@@ -1371,7 +1455,6 @@ function renderTabs() {
   tw.innerHTML = '';
 
   db.tabs.forEach(tab => {
-    // For non-admin: skip tabs hidden by visibility
     if (!isAdmin && !canSeeTab(currentUser, tab.id)) return;
 
     const btn = document.createElement('button');
@@ -1398,7 +1481,7 @@ function setActiveTab(tabId) {
 
 // ── VISIBILITY HELPERS ──
 function canSeeTab(user, tabId) {
-  if (!user.visibility) return true;                       // null = see all
+  if (!user.visibility) return true;
   return user.visibility.tabs && user.visibility.tabs.includes(tabId);
 }
 
@@ -1439,14 +1522,12 @@ function renderTabContent() {
   cards.forEach(card => {
     const wrapper = document.createElement('div');
     wrapper.className = 'card-resizable-wrapper';
-    // Apply saved colSpan (1-3)
     const span = Math.max(1, Math.min(3, card.colSpan || 1));
     wrapper.style.gridColumn = span > 1 ? `span ${span}` : '';
 
     const c = document.createElement('div');
     c.className = 'card' + (card.link ? ' clickable' : '');
 
-    // Hidden badge (admin view only, for cards hidden from some users)
     const isHiddenFromSomeone = isAdmin && isCardHiddenFromAnyUser(card.id);
 
     c.innerHTML = `
@@ -1466,7 +1547,6 @@ function renderTabContent() {
       c.onclick = () => window.open(card.link, '_blank');
     }
 
-    // Resize handle (admin only)
     if (isAdmin) {
       const rh = document.createElement('div');
       rh.className = 'resize-handle';
@@ -1491,7 +1571,6 @@ function renderTabContent() {
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', onUp);
       });
-      // Touch support
       rh.addEventListener('touchstart', ev => {
         ev.preventDefault();
         startX    = ev.touches[0].clientX;
@@ -1517,7 +1596,6 @@ function renderTabContent() {
     grid.appendChild(wrapper);
   });
 
-  // Add card button
   if (isAdmin) {
     const addCard = document.createElement('div');
     addCard.className = 'card-add';
@@ -1603,7 +1681,7 @@ function renderAdminTab(tc) {
 
   tc.appendChild(div);
 
-  // ── Fill Tabs Table ──
+  // ── Tabs Table ──
   const tabsBody = div.querySelector('#tabsTableBody');
   db.tabs.forEach(tab => {
     const count = db.cards.filter(c => c.tabId === tab.id).length;
@@ -1620,7 +1698,7 @@ function renderAdminTab(tc) {
     tabsBody.appendChild(tr);
   });
 
-  // ── Fill Users Table ──
+  // ── Users Table ──
   const usersBody = div.querySelector('#usersTableBody');
   db.users.forEach(user => {
     const tr = document.createElement('tr');
@@ -1651,10 +1729,10 @@ function renderAdminTab(tc) {
 
 function togglePwDisplay(btn, pw) {
   if (btn.dataset.showing === '1') {
-    btn.textContent   = 'Show';
+    btn.textContent     = 'Show';
     btn.dataset.showing = '0';
   } else {
-    btn.textContent   = pw;
+    btn.textContent     = pw;
     btn.dataset.showing = '1';
   }
 }
@@ -1744,7 +1822,6 @@ function deleteCard(e, cardId) {
   e.stopPropagation();
   if (!confirm('Delete this card?')) return;
   db.cards = db.cards.filter(c => c.id !== cardId);
-  // Remove from visibility records
   db.users.forEach(u => {
     if (u.visibility && u.visibility.cards) {
       u.visibility.cards = u.visibility.cards.filter(id => id !== cardId);
@@ -1851,8 +1928,8 @@ function saveUser() {
   const unit     = document.getElementById('newUnit').value.trim();
   const role     = document.getElementById('newRole').value;
 
-  if (!username)                           { showToast('Username is required.');           return; }
-  if (!editingUserId && !password)         { showToast('Password is required.');           return; }
+  if (!username)               { showToast('Username is required.');  return; }
+  if (!editingUserId && !password) { showToast('Password is required.'); return; }
 
   if (editingUserId) {
     const dup = db.users.find(u => u.username === username && u.id !== editingUserId);
@@ -1921,11 +1998,9 @@ function openVisibilityModal(userId) {
   document.getElementById('visModalTitle').textContent =
     `Visibility — ${user.fullName || user.username}`;
 
-  // Clone existing visibility or build default (all visible)
   if (user.visibility) {
     pendingVisibility = JSON.parse(JSON.stringify(user.visibility));
   } else {
-    // null means "see everything"; build an explicit full-access object
     pendingVisibility = {
       tabs:  db.tabs.map(t => t.id),
       cards: db.cards.map(c => c.id)
@@ -1942,37 +2017,50 @@ function buildVisGrid() {
 
   db.tabs.forEach(tab => {
     const tabChecked = pendingVisibility.tabs.includes(tab.id);
+    const tabCards   = db.cards.filter(c => c.tabId === tab.id);
+
     const section = document.createElement('div');
     section.className = 'vis-tab-section';
 
-    // Tab toggle row
+    // ── Tab header row: label LEFT, checkbox RIGHT ──
     const tabRow = document.createElement('div');
     tabRow.className = 'vis-tab-header';
-    tabRow.innerHTML = `
-      <input type="checkbox" id="visTab_${tab.id}"
-        ${tabChecked ? 'checked' : ''}
-        onchange="onVisTabToggle(${tab.id},this.checked)" />
-      <label for="visTab_${tab.id}" style="cursor:pointer;margin:0;font-size:13px;font-weight:600;">
-        ${escHtml(tab.name)}
-      </label>
-    `;
+
+    const labelSpan = document.createElement('div');
+    labelSpan.className = 'vis-tab-header-label';
+    labelSpan.innerHTML = `📑 ${escHtml(tab.name)}
+      <span style="font-size:11px;font-weight:400;color:#888;">(${tabCards.length} card${tabCards.length !== 1 ? 's' : ''})</span>`;
+
+    const tabChk = document.createElement('input');
+    tabChk.type = 'checkbox';
+    tabChk.id   = `visTab_${tab.id}`;
+    tabChk.checked = tabChecked;
+    tabChk.addEventListener('change', () => onVisTabToggle(tab.id, tabChk.checked));
+
+    tabRow.appendChild(labelSpan);
+    tabRow.appendChild(tabChk);
     section.appendChild(tabRow);
 
-    // Cards under this tab
-    const tabCards = db.cards.filter(c => c.tabId === tab.id);
+    // ── Card rows: label LEFT, checkbox RIGHT ──
     tabCards.forEach(card => {
       const cardChecked = pendingVisibility.cards.includes(card.id);
+
       const cardRow = document.createElement('div');
       cardRow.className = 'vis-card-row';
-      cardRow.innerHTML = `
-        <input type="checkbox" id="visCard_${card.id}"
-          ${cardChecked ? 'checked' : ''}
-          ${!tabChecked ? 'disabled' : ''}
-          onchange="onVisCardToggle(${card.id},this.checked)" />
-        <label for="visCard_${card.id}" style="cursor:pointer;margin:0;">
-          ${card.icon} ${escHtml(card.title)}
-        </label>
-      `;
+
+      const cardLabel = document.createElement('div');
+      cardLabel.className = 'vis-card-row-label';
+      cardLabel.innerHTML = `${card.icon || '📋'} ${escHtml(card.title)}`;
+
+      const cardChk = document.createElement('input');
+      cardChk.type = 'checkbox';
+      cardChk.id   = `visCard_${card.id}`;
+      cardChk.checked  = cardChecked;
+      cardChk.disabled = !tabChecked;
+      cardChk.addEventListener('change', () => onVisCardToggle(card.id, cardChk.checked));
+
+      cardRow.appendChild(cardLabel);
+      cardRow.appendChild(cardChk);
       section.appendChild(cardRow);
     });
 
@@ -1983,13 +2071,11 @@ function buildVisGrid() {
 function onVisTabToggle(tabId, checked) {
   if (checked) {
     if (!pendingVisibility.tabs.includes(tabId)) pendingVisibility.tabs.push(tabId);
-    // Re-enable all cards in this tab
     db.cards.filter(c => c.tabId === tabId).forEach(c => {
       if (!pendingVisibility.cards.includes(c.id)) pendingVisibility.cards.push(c.id);
     });
   } else {
     pendingVisibility.tabs = pendingVisibility.tabs.filter(id => id !== tabId);
-    // Also uncheck cards (disable checkboxes)
     db.cards.filter(c => c.tabId === tabId).forEach(c => {
       pendingVisibility.cards = pendingVisibility.cards.filter(id => id !== c.id);
     });
@@ -2009,7 +2095,6 @@ function saveVisibility() {
   const user = db.users.find(u => u.id === visibilityUserId);
   if (!user) { closeModal('visibilityModal'); return; }
 
-  // If user can see all tabs and all cards → set null (unrestricted)
   const allTabs  = db.tabs.every(t  => pendingVisibility.tabs.includes(t.id));
   const allCards = db.cards.every(c => pendingVisibility.cards.includes(c.id));
   user.visibility = (allTabs && allCards) ? null : pendingVisibility;
@@ -2020,11 +2105,8 @@ function saveVisibility() {
   showToast('Visibility saved.');
 }
 
-// Quick visibility shortcut from card's eye button
 function openVisForCard(e, cardId) {
   e.stopPropagation();
-  // Open visibility modal selecting the first user that doesn't have access
-  // — or just open the user list for context
   showToast('Use "🔒 Visibility" per user in Manage Users to control card access.');
 }
 
@@ -2045,7 +2127,6 @@ function saveSettings() {
   db.settings.adminUnit = document.getElementById('settingsAdminUnit').value.trim();
   db.settings.logoUrl   = document.getElementById('settingsLogoUrl').value.trim();
 
-  // Also update admin user's unit
   const adminUser = db.users.find(u => u.id === currentUser.id);
   if (adminUser && db.settings.adminUnit) {
     adminUser.unit = db.settings.adminUnit;
@@ -2066,7 +2147,6 @@ function toggleDark() {
   localStorage.setItem('clerksportal_dark', document.body.classList.contains('dark') ? '1' : '0');
 }
 
-// Restore dark mode preference
 (function() {
   if (localStorage.getItem('clerksportal_dark') === '1') {
     document.body.classList.add('dark');
